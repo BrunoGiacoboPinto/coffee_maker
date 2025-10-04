@@ -22,6 +22,4 @@ abstract class Environment {
   )
   static const String probeEndpoint = _Environment.probeEndpoint;
 
-  @EnviedField(varName: 'API_KEY', obfuscate: true, defaultValue: '')
-  static final String apiKey = _Environment.apiKey;
 }
