@@ -1,0 +1,27 @@
+{
+    "@@locale": "pt",
+    "counterAppBarTitle": "Contador",
+    "@counterAppBarTitle": {
+        "description": "Texto mostrado na AppBar da página do contador"
+    },
+    "offlineMessage": "Sem conexão com a internet",
+    "@offlineMessage": {
+        "description": "Mensagem mostrada quando conectado à rede mas sem acesso à internet"
+    },
+    "noNetworkMessage": "Não conectado a nenhuma rede",
+    "@noNetworkMessage": {
+        "description": "Mensagem mostrada quando não há interface de rede conectada"
+    },
+    "retry": "Tentar novamente",
+    "@retry": {
+        "description": "Texto do botão para tentar novamente a verificação de conectividade"
+    },
+    "homeLabel": "Início",
+    "@homeLabel": {
+        "description": "Rótulo para a aba Início na navegação inferior"
+    },
+    "favoritesLabel": "Favoritos",
+    "@favoritesLabel": {
+        "description": "Rótulo para a aba Favoritos na navegação inferior"
+    }
+}

@@ -15,5 +15,13 @@
     "retry": "Reintentar",
     "@retry": {
         "description": "Texto del botón para reintentar verificación de conectividad"
+    },
+    "homeLabel": "Inicio",
+    "@homeLabel": {
+        "description": "Etiqueta para la pestaña Inicio en la navegación inferior"
+    },
+    "favoritesLabel": "Favoritos",
+    "@favoritesLabel": {
+        "description": "Etiqueta para la pestaña Favoritos en la navegación inferior"
     }
 }

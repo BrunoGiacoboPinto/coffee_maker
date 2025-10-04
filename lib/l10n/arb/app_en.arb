@@ -15,5 +15,13 @@
     "retry": "Retry",
     "@retry": {
         "description": "Button text to retry connectivity check"
+    },
+    "homeLabel": "Home",
+    "@homeLabel": {
+        "description": "Label for the Home tab in bottom navigation"
+    },
+    "favoritesLabel": "Favorites",
+    "@favoritesLabel": {
+        "description": "Label for the Favorites tab in bottom navigation"
     }
 }
