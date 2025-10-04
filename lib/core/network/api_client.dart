@@ -14,7 +14,6 @@ class ApiClient {
       connectTimeout: const Duration(seconds: env.Environment.connectTimeout),
       receiveTimeout: const Duration(seconds: env.Environment.receiveTimeout),
       headers: {
-        'Authorization': 'Bearer ${env.Environment.apiKey}',
         'Content-Type': 'application/json',
       },
     );
