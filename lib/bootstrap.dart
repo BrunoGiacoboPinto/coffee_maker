@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:coffee_maker/di/injection.dart';
 import 'package:coffee_maker/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -37,6 +38,8 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
 
+      await configureDependencies();
+
       Logger.root.level = kDebugMode ? Level.ALL : Level.INFO;
       Logger.root.onRecord.listen(
         (record) {
@@ -72,5 +75,6 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
         trace.terse,
       );
     },
+    zoneValues: {#flutter.io.allow_http: false},
   );
 }
