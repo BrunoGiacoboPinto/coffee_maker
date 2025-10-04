@@ -1,10 +1,11 @@
+import 'package:coffee_maker/app/router/app_routes.dart';
 import 'package:coffee_maker/app/view/shell_navigation.dart';
 import 'package:coffee_maker/favorites/favorites.dart';
 import 'package:coffee_maker/home/home.dart';
 import 'package:go_router/go_router.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/home',
+  initialLocation: AppRoutes.home.path,
   routes: [
     ShellRoute(
       builder: (context, state, child) {
@@ -12,11 +13,13 @@ final GoRouter appRouter = GoRouter(
       },
       routes: [
         GoRoute(
-          path: '/home',
+          name: AppRoutes.home.name,
+          path: AppRoutes.home.path,
           builder: (context, state) => const HomePage(),
         ),
         GoRoute(
-          path: '/favorites',
+          name: AppRoutes.favorites.name,
+          path: AppRoutes.favorites.path,
           builder: (context, state) => const FavoritesPage(),
         ),
       ],

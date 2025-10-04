@@ -1,3 +1,4 @@
+import 'package:coffee_maker/app/router/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -31,23 +32,16 @@ final class ShellNavigationScaffold extends StatelessWidget {
   }
 
   int _getCurrentIndex(BuildContext context) {
-    final location = GoRouterState.of(context).uri.path;
-    switch (location) {
-      case '/home':
-        return 0;
-      case '/favorites':
-        return 1;
-      default:
-        return 0;
-    }
+    final route = AppRoutes.fromPath(GoRouterState.of(context).uri.path);
+    return route.index;
   }
 
   void _onTap(BuildContext context, int index) {
     switch (index) {
       case 0:
-        context.go('/home');
+        context.goNamed(AppRoutes.home.name);
       case 1:
-        context.go('/favorites');
+        context.goNamed(AppRoutes.favorites.name);
     }
   }
 }
