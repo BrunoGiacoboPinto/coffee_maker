@@ -1,4 +1,5 @@
 import 'package:coffee_maker/app/router/app_routes.dart';
+import 'package:coffee_maker/app/widgets/connectivity_banner.dart';
 import 'package:coffee_maker/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -14,7 +15,7 @@ final class ShellNavigationScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: child,
+      body: ConnectivityBanner(child: child),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _getCurrentIndex(context),
         onTap: (index) => _onTap(context, index),

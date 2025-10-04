@@ -1,3 +1,4 @@
+import 'package:coffee_maker/di/injection.dart';
 import 'package:coffee_maker/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +21,7 @@ class ConnectivityBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<ConnectivityCubit, ConnectivityStatus>(
+      bloc: getIt<ConnectivityCubit>(),
       listener: (context, status) {
         final messenger = ScaffoldMessenger.of(context);
 
@@ -72,7 +74,7 @@ class ConnectivityBanner extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () async {
-              await context.read<ConnectivityCubit>().checkConnectivity();
+              await getIt<ConnectivityCubit>().checkConnectivity();
             },
             child: Text(
               retryText ?? l10n.retry,
