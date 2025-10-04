@@ -1,7 +1,7 @@
-import 'package:coffee_maker/core/network/http_client_provider.dart';
 import 'package:environment/environment.dart' as env;
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
+import 'package:network/src/http_client_provider.dart';
 
 @lazySingleton
 class InternetProber {

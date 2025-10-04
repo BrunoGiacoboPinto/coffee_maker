@@ -1,0 +1,19 @@
+name: network
+description: Network connectivity and HTTP client utilities for Coffee Maker app
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  bloc: ^9.0.1
+  connectivity_plus: ^6.0.5
+  environment:
+    path: ../environment
+  http: ^1.2.2
+  injectable: ^2.5.0
+  logging: ^1.3.0
+
+dev_dependencies:
+  very_good_analysis: ^10.0.0

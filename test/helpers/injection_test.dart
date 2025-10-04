@@ -1,9 +1,7 @@
 import 'package:coffee_maker/core/network/api_client.dart';
-import 'package:coffee_maker/core/network/http_client_provider.dart';
 import 'package:coffee_maker/counter/cubit/counter_cubit.dart';
 import 'package:coffee_maker/di/injection.dart';
-import 'package:coffee_maker/network/cubit/connectivity_cubit.dart';
-import 'package:coffee_maker/network/cubit/internet_prober.dart';
+import 'package:network/network.dart';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';

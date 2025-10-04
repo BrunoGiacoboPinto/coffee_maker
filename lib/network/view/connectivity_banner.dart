@@ -1,15 +1,21 @@
 import 'package:coffee_maker/l10n/l10n.dart';
-import 'package:coffee_maker/network/cubit/connectivity_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:network/network.dart';
 
 class ConnectivityBanner extends StatelessWidget {
   const ConnectivityBanner({
     required this.child,
+    this.noNetworkMessage,
+    this.offlineMessage,
+    this.retryText,
     super.key,
   });
 
   final Widget child;
+  final String? noNetworkMessage;
+  final String? offlineMessage;
+  final String? retryText;
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +46,8 @@ class ConnectivityBanner extends StatelessWidget {
     messenger.clearMaterialBanners();
 
     final message = status == ConnectivityStatus.noNetwork
-        ? l10n.noNetworkMessage
-        : l10n.offlineMessage;
+        ? (noNetworkMessage ?? l10n.noNetworkMessage)
+        : (offlineMessage ?? l10n.offlineMessage);
 
     messenger.showMaterialBanner(
       MaterialBanner(
@@ -69,7 +75,7 @@ class ConnectivityBanner extends StatelessWidget {
               await context.read<ConnectivityCubit>().checkConnectivity();
             },
             child: Text(
-              l10n.retry,
+              retryText ?? l10n.retry,
               style: TextStyle(
                 color: theme.colorScheme.onErrorContainer,
               ),
