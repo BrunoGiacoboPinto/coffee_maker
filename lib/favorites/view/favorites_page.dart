@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-final class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+final class FavoritesPage extends StatelessWidget {
+  const FavoritesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const HomeView();
+    return const FavoritesView();
   }
 }
 
-final class HomeView extends StatelessWidget {
+final class FavoritesView extends StatelessWidget {
   @visibleForTesting
-  const HomeView({super.key});
+  const FavoritesView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ final class HomeView extends StatelessWidget {
         ],
       ),
       childrenDelegate: SliverChildBuilderDelegate(
-        (context, index) => Container(color: Colors.red),
+        (context, index) => Container(color: Colors.blue),
       ),
     );
   }
