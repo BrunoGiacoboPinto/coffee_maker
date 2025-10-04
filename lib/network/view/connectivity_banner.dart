@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:coffee_maker/l10n/l10n.dart';
 import 'package:coffee_maker/network/cubit/connectivity_cubit.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConnectivityBanner extends StatelessWidget {
   const ConnectivityBanner({
