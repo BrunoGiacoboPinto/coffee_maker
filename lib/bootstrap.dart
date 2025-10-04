@@ -38,8 +38,6 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
 
-      await configureDependencies();
-
       Logger.root.level = kDebugMode ? Level.ALL : Level.INFO;
       Logger.root.onRecord.listen(
         (record) {
@@ -64,6 +62,8 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
       };
 
       Bloc.observer = const AppBlocObserver();
+
+      await configureDependencies();
 
       runApp(await builder());
     },
