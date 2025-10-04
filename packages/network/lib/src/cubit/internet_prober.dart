@@ -1,7 +1,7 @@
 import 'package:environment/environment.dart' as env;
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
-import 'package:network/src/http_client_provider.dart';
+import 'package:network/src/cubit/http_client_provider.dart';
 
 @lazySingleton
 class InternetProber {
