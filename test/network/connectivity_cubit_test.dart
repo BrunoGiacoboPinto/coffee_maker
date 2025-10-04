@@ -1,8 +1,7 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-
 import 'package:coffee_maker/network/cubit/connectivity_cubit.dart';
 import 'package:coffee_maker/network/cubit/internet_prober.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 
 class MockInternetProber extends Mock implements InternetProber {}
 

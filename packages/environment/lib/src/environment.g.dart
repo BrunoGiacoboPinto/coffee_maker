@@ -19,16 +19,4 @@ final class _Environment {
   static const int probeTimeout = 3;
 
   static const String probeEndpoint = 'https://www.gstatic.com/generate_204';
-
-  static const List<int> _enviedkeyapiKey = <int>[];
-
-  static const List<int> _envieddataapiKey = <int>[];
-
-  static final String apiKey = String.fromCharCodes(
-    List<int>.generate(
-      _envieddataapiKey.length,
-      (int i) => i,
-      growable: false,
-    ).map((int i) => _envieddataapiKey[i] ^ _enviedkeyapiKey[i]),
-  );
 }

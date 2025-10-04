@@ -11,7 +11,6 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:coffee_maker/core/network/api_client.dart' as _i956;
 import 'package:coffee_maker/core/network/http_client_provider.dart' as _i502;
-import 'package:coffee_maker/counter/cubit/counter_cubit.dart' as _i899;
 import 'package:coffee_maker/network/cubit/connectivity_cubit.dart' as _i433;
 import 'package:coffee_maker/network/cubit/internet_prober.dart' as _i888;
 import 'package:get_it/get_it.dart' as _i174;
@@ -24,7 +23,6 @@ extension GetItInjectableX on _i174.GetIt {
     _i526.EnvironmentFilter? environmentFilter,
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
-    gh.factory<_i899.CounterCubit>(() => _i899.CounterCubit());
     gh.lazySingleton<_i502.HttpClientProvider>(
       () => _i502.HttpClientProvider(),
     );
