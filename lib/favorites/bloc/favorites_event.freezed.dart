@@ -55,12 +55,13 @@ extension FavoritesEventPatterns on FavoritesEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( FetchFavoritesEvent value)?  fetchFavorites,TResult Function( ToggleFavoriteEvent value)?  toggleFavorite,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( FetchFavoritesEvent value)?  fetchFavorites,TResult Function( ToggleFavoriteEvent value)?  toggleFavorite,TResult Function( PhotosUpdatedEvent value)?  photosUpdated,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case FetchFavoritesEvent() when fetchFavorites != null:
 return fetchFavorites(_that);case ToggleFavoriteEvent() when toggleFavorite != null:
-return toggleFavorite(_that);case _:
+return toggleFavorite(_that);case PhotosUpdatedEvent() when photosUpdated != null:
+return photosUpdated(_that);case _:
   return orElse();
 
 }
@@ -78,12 +79,13 @@ return toggleFavorite(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( FetchFavoritesEvent value)  fetchFavorites,required TResult Function( ToggleFavoriteEvent value)  toggleFavorite,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( FetchFavoritesEvent value)  fetchFavorites,required TResult Function( ToggleFavoriteEvent value)  toggleFavorite,required TResult Function( PhotosUpdatedEvent value)  photosUpdated,}){
 final _that = this;
 switch (_that) {
 case FetchFavoritesEvent():
 return fetchFavorites(_that);case ToggleFavoriteEvent():
-return toggleFavorite(_that);case _:
+return toggleFavorite(_that);case PhotosUpdatedEvent():
+return photosUpdated(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -100,12 +102,13 @@ return toggleFavorite(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( FetchFavoritesEvent value)?  fetchFavorites,TResult? Function( ToggleFavoriteEvent value)?  toggleFavorite,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( FetchFavoritesEvent value)?  fetchFavorites,TResult? Function( ToggleFavoriteEvent value)?  toggleFavorite,TResult? Function( PhotosUpdatedEvent value)?  photosUpdated,}){
 final _that = this;
 switch (_that) {
 case FetchFavoritesEvent() when fetchFavorites != null:
 return fetchFavorites(_that);case ToggleFavoriteEvent() when toggleFavorite != null:
-return toggleFavorite(_that);case _:
+return toggleFavorite(_that);case PhotosUpdatedEvent() when photosUpdated != null:
+return photosUpdated(_that);case _:
   return null;
 
 }
@@ -122,11 +125,12 @@ return toggleFavorite(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  fetchFavorites,TResult Function( String id)?  toggleFavorite,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  fetchFavorites,TResult Function( String id)?  toggleFavorite,TResult Function( List<CoffeePhotoData> photos)?  photosUpdated,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case FetchFavoritesEvent() when fetchFavorites != null:
 return fetchFavorites();case ToggleFavoriteEvent() when toggleFavorite != null:
-return toggleFavorite(_that.id);case _:
+return toggleFavorite(_that.id);case PhotosUpdatedEvent() when photosUpdated != null:
+return photosUpdated(_that.photos);case _:
   return orElse();
 
 }
@@ -144,11 +148,12 @@ return toggleFavorite(_that.id);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  fetchFavorites,required TResult Function( String id)  toggleFavorite,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  fetchFavorites,required TResult Function( String id)  toggleFavorite,required TResult Function( List<CoffeePhotoData> photos)  photosUpdated,}) {final _that = this;
 switch (_that) {
 case FetchFavoritesEvent():
 return fetchFavorites();case ToggleFavoriteEvent():
-return toggleFavorite(_that.id);case _:
+return toggleFavorite(_that.id);case PhotosUpdatedEvent():
+return photosUpdated(_that.photos);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -165,11 +170,12 @@ return toggleFavorite(_that.id);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  fetchFavorites,TResult? Function( String id)?  toggleFavorite,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  fetchFavorites,TResult? Function( String id)?  toggleFavorite,TResult? Function( List<CoffeePhotoData> photos)?  photosUpdated,}) {final _that = this;
 switch (_that) {
 case FetchFavoritesEvent() when fetchFavorites != null:
 return fetchFavorites();case ToggleFavoriteEvent() when toggleFavorite != null:
-return toggleFavorite(_that.id);case _:
+return toggleFavorite(_that.id);case PhotosUpdatedEvent() when photosUpdated != null:
+return photosUpdated(_that.photos);case _:
   return null;
 
 }
@@ -269,6 +275,78 @@ class _$ToggleFavoriteEventCopyWithImpl<$Res>
   return _then(ToggleFavoriteEvent(
 null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class PhotosUpdatedEvent implements FavoritesEvent {
+  const PhotosUpdatedEvent(final  List<CoffeePhotoData> photos): _photos = photos;
+  
+
+ final  List<CoffeePhotoData> _photos;
+ List<CoffeePhotoData> get photos {
+  if (_photos is EqualUnmodifiableListView) return _photos;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_photos);
+}
+
+
+/// Create a copy of FavoritesEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PhotosUpdatedEventCopyWith<PhotosUpdatedEvent> get copyWith => _$PhotosUpdatedEventCopyWithImpl<PhotosUpdatedEvent>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PhotosUpdatedEvent&&const DeepCollectionEquality().equals(other._photos, _photos));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_photos));
+
+@override
+String toString() {
+  return 'FavoritesEvent.photosUpdated(photos: $photos)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $PhotosUpdatedEventCopyWith<$Res> implements $FavoritesEventCopyWith<$Res> {
+  factory $PhotosUpdatedEventCopyWith(PhotosUpdatedEvent value, $Res Function(PhotosUpdatedEvent) _then) = _$PhotosUpdatedEventCopyWithImpl;
+@useResult
+$Res call({
+ List<CoffeePhotoData> photos
+});
+
+
+
+
+}
+/// @nodoc
+class _$PhotosUpdatedEventCopyWithImpl<$Res>
+    implements $PhotosUpdatedEventCopyWith<$Res> {
+  _$PhotosUpdatedEventCopyWithImpl(this._self, this._then);
+
+  final PhotosUpdatedEvent _self;
+  final $Res Function(PhotosUpdatedEvent) _then;
+
+/// Create a copy of FavoritesEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? photos = null,}) {
+  return _then(PhotosUpdatedEvent(
+null == photos ? _self._photos : photos // ignore: cast_nullable_to_non_nullable
+as List<CoffeePhotoData>,
   ));
 }
 

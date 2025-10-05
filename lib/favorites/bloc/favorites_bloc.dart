@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:coffee_maker/favorites/bloc/favorites_event.dart';
 import 'package:coffee_maker/favorites/bloc/favorites_state.dart';
@@ -17,16 +19,21 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
        ) {
     on<FetchFavoritesEvent>(_onFetchFavorites);
     on<ToggleFavoriteEvent>(_onToggleFavorite);
+    on<PhotosUpdatedEvent>(_onPhotosUpdated);
+
+    _photosSubscription = _coffeePhotosRepository.photosStream.listen((photos) {
+      add(FavoritesEvent.photosUpdated(photos));
+    });
   }
 
   late final _logger = Logger('FavoritesBloc');
   final CoffeePhotosRepository _coffeePhotosRepository;
+  late final StreamSubscription<List<CoffeePhotoData>> _photosSubscription;
 
   Future<void> _onFetchFavorites(
     FetchFavoritesEvent event,
     Emitter<FavoritesState> emit,
   ) async {
-    // Only show loading if we're coming from initial state
     if (state is FavoritesInitialState) {
       emit(const FavoritesState.loading());
     }
@@ -49,5 +56,21 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
     await _coffeePhotosRepository.toggleFavorite(event.id);
     final favorites = _coffeePhotosRepository.getCachedFavorites();
     emit(FavoritesState.success(favorites));
+  }
+
+  Future<void> _onPhotosUpdated(
+    PhotosUpdatedEvent event,
+    Emitter<FavoritesState> emit,
+  ) async {
+    if (state is FavoritesSuccessState) {
+      final favorites = event.photos.where((p) => p.isFavorite).toList();
+      emit(FavoritesState.success(favorites));
+    }
+  }
+
+  @override
+  Future<void> close() async {
+    await _photosSubscription.cancel();
+    await super.close();
   }
 }
