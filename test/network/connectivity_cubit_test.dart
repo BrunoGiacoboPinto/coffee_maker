@@ -1,6 +1,6 @@
-import 'package:network/network.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:network/network.dart';
 
 class MockInternetProber extends Mock implements InternetProber {}
 

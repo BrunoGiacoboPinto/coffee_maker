@@ -1,15 +1,16 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:hive_ce/hive.dart';
 import 'package:coffee_photos_repository/src/models/coffee_photo_data.dart';
 import 'package:coffee_photos_repository/src/models/coffee_photo_data_adapter.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:hive_ce/hive.dart';
 
 void main() {
   group('CoffeePhotoDataAdapter', () {
     late Box<CoffeePhotoData> box;
 
     setUpAll(() async {
-      Hive.init('test');
-      Hive.registerAdapter(CoffeePhotoDataAdapter());
+      Hive
+        ..init('test')
+        ..registerAdapter(CoffeePhotoDataAdapter());
       box = await Hive.openBox<CoffeePhotoData>('test_box');
     });
 
