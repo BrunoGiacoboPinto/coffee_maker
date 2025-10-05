@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:coffee_photos_repository/src/coffee_photos_service.dart';
 import 'package:coffee_photos_repository/src/models/coffee_photo_data.dart';
 import 'package:coffee_photos_repository/src/models/coffee_photo_response.dart';
@@ -23,6 +25,10 @@ class CoffeePhotosRepository {
   };
 
   late final _logger = Logger('CoffeePhotosRepository');
+  final _photosController = StreamController<List<CoffeePhotoData>>.broadcast();
+
+  /// Stream that emits updated photo lists whenever favorites change
+  Stream<List<CoffeePhotoData>> get photosStream => _photosController.stream;
 
   /// Fetches coffee photos from the service and caches them locally.
   ///
@@ -59,6 +65,7 @@ class CoffeePhotosRepository {
     if (_cache[id] case final photo?) {
       _cache[id] = photo.copyWith(isFavorite: !photo.isFavorite);
       await _photosBox.put(id, _cache[id]!);
+      _photosController.add(getCachedPhotos()); // Notify subscribers
       return _cache[id];
     }
 
@@ -112,5 +119,10 @@ class CoffeePhotosRepository {
   String _extractPhotoId(CoffeePhotoResponse photo) {
     final url = Uri.parse(photo.file);
     return url.pathSegments.last.replaceAll('.jpg', '');
+  }
+
+  /// Disposes of the stream controller to prevent memory leaks
+  Future<void> dispose() async {
+    await _photosController.close();
   }
 }
