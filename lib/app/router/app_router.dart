@@ -1,4 +1,5 @@
 import 'package:coffee_maker/app/router/app_routes.dart';
+import 'package:coffee_maker/app/router/page_view_transition.dart';
 import 'package:coffee_maker/app/view/shell_navigation.dart';
 import 'package:coffee_maker/coffee_photo_details/coffee_photo_details.dart';
 import 'package:coffee_maker/di/injection.dart';
@@ -17,13 +18,21 @@ final GoRouter appRouter = GoRouter(
         GoRoute(
           name: AppRoutes.home.name,
           path: AppRoutes.home.path,
-          builder: (context, state) => HomePage(homeBloc: getIt<HomeBloc>()),
+          pageBuilder: (context, state) => StatefulPageViewTransitionPage(
+            key: state.pageKey,
+            routeIndex: AppRoutes.home.index,
+            child: HomePage(homeBloc: getIt<HomeBloc>()),
+          ),
         ),
         GoRoute(
           name: AppRoutes.favorites.name,
           path: AppRoutes.favorites.path,
-          builder: (context, state) => FavoritesPage(
-            favoritesBloc: getIt<FavoritesBloc>(),
+          pageBuilder: (context, state) => StatefulPageViewTransitionPage(
+            key: state.pageKey,
+            routeIndex: AppRoutes.favorites.index,
+            child: FavoritesPage(
+              favoritesBloc: getIt<FavoritesBloc>(),
+            ),
           ),
         ),
         GoRoute(
