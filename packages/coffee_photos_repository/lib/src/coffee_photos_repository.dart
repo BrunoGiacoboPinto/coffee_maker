@@ -55,11 +55,14 @@ class CoffeePhotosRepository {
   /// Toggles the favorite status of a photo with the given [id].
   ///
   /// If the photo exists in cache, its favorite status will be flipped.
-  Future<void> toggleFavorite(String id) async {
+  Future<CoffeePhotoData?> toggleFavorite(String id) async {
     if (_cache[id] case final photo?) {
       _cache[id] = photo.copyWith(isFavorite: !photo.isFavorite);
       await _photosBox.put(id, _cache[id]!);
+      return _cache[id];
     }
+
+    return null;
   }
 
   /// Retrieves a specific photo by its [id].
