@@ -10,9 +10,9 @@ environment:
 dependencies:
   bloc: ^9.0.1
   cached_network_image: ^3.4.1
-  connectivity_plus: ^6.0.5
   coffee_photos_repository:
     path: packages/coffee_photos_repository
+  connectivity_plus: ^6.0.5
   dio: ^5.9.0
   environment:
     path: packages/environment
@@ -36,9 +36,9 @@ dependencies:
   logging: ^1.3.0
   network:
     path: packages/network
-  stack_trace: ^1.12.1
   path_provider: ^2.1.5
   shimmer: ^3.0.0
+  stack_trace: ^1.12.1
 
 dev_dependencies:
   bloc_test: ^10.0.0
