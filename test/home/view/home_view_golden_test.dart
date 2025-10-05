@@ -70,6 +70,35 @@ void main() {
       );
 
       testWidgets(
+        'renders HomeView success state with loading indicator',
+        tags: TestTag.golden,
+        (tester) async {
+          tester
+            ..setupPathProviderMocks()
+            ..setupDatabaseFactory();
+          final photos = TestDataFactory.createMockCoffeePhotoList(count: 4);
+          when(() => mockHomeBloc.state).thenReturn(
+            HomeState.success(photos, isLoadingMore: true),
+          );
+          when(
+            () => mockHomeBloc.stream,
+          ).thenAnswer(
+            (_) => Stream.value(HomeState.success(photos, isLoadingMore: true)),
+          );
+
+          await tester.pumpAppWithTheme(
+            HomeView(homeBloc: mockHomeBloc),
+            theme: ThemeData(useMaterial3: true),
+          );
+
+          await expectLater(
+            find.byType(HomeView),
+            matchesGoldenFile('home_view_loading_more_light.png'),
+          );
+        },
+      );
+
+      testWidgets(
         'renders HomeView success state with empty photos',
         tags: TestTag.golden,
         (tester) async {
@@ -169,6 +198,35 @@ void main() {
           await expectLater(
             find.byType(HomeView),
             matchesGoldenFile('home_view_success_dark.png'),
+          );
+        },
+      );
+
+      testWidgets(
+        'renders HomeView success state with loading indicator in dark theme',
+        tags: TestTag.golden,
+        (tester) async {
+          tester
+            ..setupPathProviderMocks()
+            ..setupDatabaseFactory();
+          final photos = TestDataFactory.createMockCoffeePhotoList(count: 4);
+          when(() => mockHomeBloc.state).thenReturn(
+            HomeState.success(photos, isLoadingMore: true),
+          );
+          when(
+            () => mockHomeBloc.stream,
+          ).thenAnswer(
+            (_) => Stream.value(HomeState.success(photos, isLoadingMore: true)),
+          );
+
+          await tester.pumpAppWithTheme(
+            HomeView(homeBloc: mockHomeBloc),
+            darkTheme: ThemeData(useMaterial3: true),
+          );
+
+          await expectLater(
+            find.byType(HomeView),
+            matchesGoldenFile('home_view_loading_more_dark.png'),
           );
         },
       );

@@ -70,6 +70,7 @@ void main() {
 
           expect(find.byType(CoffeePhotoCard), findsNWidgets(3));
           expect(find.byType(Shimmer), findsNWidgets(3));
+          expect(find.byType(CircularProgressIndicator), findsNothing);
         },
       );
 
@@ -129,7 +130,6 @@ void main() {
             HomeView(homeBloc: mockHomeBloc),
           );
 
-          // Use patrol finders for more precise interaction
           final favoriteIcon = find.byIcon(Icons.favorite_border);
           await tester.tap(favoriteIcon);
           await tester.pump();
@@ -139,6 +139,56 @@ void main() {
               const HomeEvent.toggleFavorite('single-photo'),
             ),
           ).called(1);
+        },
+      );
+
+      testWidgets(
+        'shows loading indicator when isLoadingMore is true',
+        (tester) async {
+          final photos = TestDataFactory.createMockCoffeePhotoList();
+          when(() => mockHomeBloc.state).thenReturn(
+            HomeState.success(photos, isLoadingMore: true),
+          );
+          when(
+            () => mockHomeBloc.stream,
+          ).thenAnswer(
+            (_) => Stream.value(HomeState.success(photos, isLoadingMore: true)),
+          );
+
+          await tester.pumpApp(
+            HomeView(homeBloc: mockHomeBloc),
+          );
+
+          expect(find.byType(CircularProgressIndicator), findsOneWidget);
+        },
+      );
+
+      testWidgets(
+        'adds LoadMorePhotosEvent when scrolling near bottom',
+        (tester) async {
+          final photos = TestDataFactory.createMockCoffeePhotoList(count: 20);
+          when(() => mockHomeBloc.state).thenReturn(HomeState.success(photos));
+          when(
+            () => mockHomeBloc.stream,
+          ).thenAnswer((_) => Stream.value(HomeState.success(photos)));
+
+          await tester.pumpApp(
+            HomeView(homeBloc: mockHomeBloc),
+          );
+
+          final gridView = find.byType(GridView);
+          expect(gridView, findsOneWidget);
+
+          await tester.drag(gridView, const Offset(0, -500));
+          await tester.pump();
+          await tester.drag(gridView, const Offset(0, -500));
+          await tester.pump();
+          await tester.drag(gridView, const Offset(0, -500));
+          await tester.pump();
+
+          verify(
+            () => mockHomeBloc.add(const HomeEvent.loadMorePhotos()),
+          ).called(greaterThan(0));
         },
       );
     });

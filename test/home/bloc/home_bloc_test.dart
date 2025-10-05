@@ -238,6 +238,183 @@ void main() {
       );
     });
 
+    group('LoadMorePhotosEvent', () {
+      setUp(() {
+        when(() => mockRepository.getCachedPhotos()).thenReturn([]);
+        homeBloc = HomeBloc(coffeePhotosRepository: mockRepository);
+      });
+
+      blocTest<HomeBloc, HomeState>(
+        'should load more photos when not loading and not at max',
+        build: () {
+          final initialPhotos = [
+            const CoffeePhotoData(
+              url: 'https://example.com/photo1.jpg',
+              id: 'photo1',
+              isFavorite: false,
+            ),
+          ];
+          final morePhotos = [
+            const CoffeePhotoData(
+              url: 'https://example.com/photo2.jpg',
+              id: 'photo2',
+              isFavorite: false,
+            ),
+          ];
+          when(
+            () => mockRepository.getCoffeePhotos(count: 15),
+          ).thenAnswer((_) async => morePhotos);
+          return homeBloc;
+        },
+        seed: () => const HomeState.success([
+          CoffeePhotoData(
+            url: 'https://example.com/photo1.jpg',
+            id: 'photo1',
+            isFavorite: false,
+          ),
+        ]),
+        act: (bloc) => bloc.add(const HomeEvent.loadMorePhotos()),
+        expect: () => [
+          const HomeState.success([
+            CoffeePhotoData(
+              url: 'https://example.com/photo1.jpg',
+              id: 'photo1',
+              isFavorite: false,
+            ),
+          ], isLoadingMore: true),
+          const HomeState.success([
+            CoffeePhotoData(
+              url: 'https://example.com/photo1.jpg',
+              id: 'photo1',
+              isFavorite: false,
+            ),
+            CoffeePhotoData(
+              url: 'https://example.com/photo2.jpg',
+              id: 'photo2',
+              isFavorite: false,
+            ),
+          ], hasReachedMax: true),
+        ],
+        verify: (_) {
+          verify(() => mockRepository.getCoffeePhotos(count: 15)).called(1);
+        },
+      );
+
+      blocTest<HomeBloc, HomeState>(
+        'should not load more photos when already loading',
+        build: () => homeBloc,
+        seed: () => const HomeState.success([
+          CoffeePhotoData(
+            url: 'https://example.com/photo1.jpg',
+            id: 'photo1',
+            isFavorite: false,
+          ),
+        ], isLoadingMore: true),
+        act: (bloc) => bloc.add(const HomeEvent.loadMorePhotos()),
+        expect: () => <HomeState>[],
+        verify: (_) {
+          verifyNever(() => mockRepository.getCoffeePhotos());
+        },
+      );
+
+      blocTest<HomeBloc, HomeState>(
+        'should not load more photos when hasReachedMax is true',
+        build: () => homeBloc,
+        seed: () => const HomeState.success([
+          CoffeePhotoData(
+            url: 'https://example.com/photo1.jpg',
+            id: 'photo1',
+            isFavorite: false,
+          ),
+        ], hasReachedMax: true),
+        act: (bloc) => bloc.add(const HomeEvent.loadMorePhotos()),
+        expect: () => <HomeState>[],
+        verify: (_) {
+          verifyNever(() => mockRepository.getCoffeePhotos());
+        },
+      );
+
+      blocTest<HomeBloc, HomeState>(
+        'should set hasReachedMax when fewer photos returned than requested',
+        build: () {
+          final fewerPhotos = [
+            const CoffeePhotoData(
+              url: 'https://example.com/photo2.jpg',
+              id: 'photo2',
+              isFavorite: false,
+            ),
+          ];
+          when(
+            () => mockRepository.getCoffeePhotos(count: 15),
+          ).thenAnswer((_) async => fewerPhotos);
+          return homeBloc;
+        },
+        seed: () => const HomeState.success([
+          CoffeePhotoData(
+            url: 'https://example.com/photo1.jpg',
+            id: 'photo1',
+            isFavorite: false,
+          ),
+        ]),
+        act: (bloc) => bloc.add(const HomeEvent.loadMorePhotos()),
+        expect: () => [
+          const HomeState.success([
+            CoffeePhotoData(
+              url: 'https://example.com/photo1.jpg',
+              id: 'photo1',
+              isFavorite: false,
+            ),
+          ], isLoadingMore: true),
+          const HomeState.success([
+            CoffeePhotoData(
+              url: 'https://example.com/photo1.jpg',
+              id: 'photo1',
+              isFavorite: false,
+            ),
+            CoffeePhotoData(
+              url: 'https://example.com/photo2.jpg',
+              id: 'photo2',
+              isFavorite: false,
+            ),
+          ], hasReachedMax: true),
+        ],
+      );
+
+      blocTest<HomeBloc, HomeState>(
+        'should handle error when loading more photos',
+        build: () {
+          when(
+            () => mockRepository.getCoffeePhotos(count: 15),
+          ).thenThrow(Exception('Network error'));
+          return homeBloc;
+        },
+        seed: () => const HomeState.success([
+          CoffeePhotoData(
+            url: 'https://example.com/photo1.jpg',
+            id: 'photo1',
+            isFavorite: false,
+          ),
+        ]),
+        act: (bloc) => bloc.add(const HomeEvent.loadMorePhotos()),
+        expect: () => [
+          const HomeState.success([
+            CoffeePhotoData(
+              url: 'https://example.com/photo1.jpg',
+              id: 'photo1',
+              isFavorite: false,
+            ),
+          ], isLoadingMore: true),
+          const HomeState.success([
+            CoffeePhotoData(
+              url: 'https://example.com/photo1.jpg',
+              id: 'photo1',
+              isFavorite: false,
+            ),
+          ], isLoadingMore: false),
+        ],
+      );
+    });
+
     group('error handling', () {
       setUp(() {
         when(() => mockRepository.getCachedPhotos()).thenReturn([]);

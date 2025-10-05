@@ -30,8 +30,3 @@ Future<void> configureTestDependencies() async {
 Future<void> resetTestDependencies() async {
   await getIt.reset();
 }
-
-void main() {
-  // This file contains helper functions for dependency injection in tests
-  // No tests are defined here as it's a utility file
-}
