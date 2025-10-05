@@ -17,10 +17,10 @@ Type-safe environment configuration using envied.
 ## Usage
 
 ```dart
-import 'package:environment/environment.dart';
+import 'package:environment_new/environment_new.dart';
 
-final baseUrl = Env.apiBaseUrl;
-final timeout = Duration(seconds: Env.connectTimeout);
+final baseUrl = Environment.apiBaseUrl;
+final timeout = Duration(seconds: Environment.connectTimeout);
 ```
 
 ## Code Generation
@@ -28,7 +28,7 @@ final timeout = Duration(seconds: Env.connectTimeout);
 After modifying environment.dart, run:
 
 ```bash
-cd packages/environment
-flutter pub get
-flutter pub run build_runner build --delete-conflicting-outputs
+cd packages/environment_new
+dart pub get
+dart pub run build_runner build --delete-conflicting-outputs
 ```

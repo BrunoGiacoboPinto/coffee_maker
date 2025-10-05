@@ -28,7 +28,7 @@ void main() {
       ).thenAnswer(
         (_) async => Response<String>(
           statusCode: 204,
-          requestOptions: RequestOptions(path: ''),
+          requestOptions: RequestOptions(),
         ),
       );
 
@@ -46,7 +46,7 @@ void main() {
       ).thenAnswer(
         (_) async => Response<String>(
           statusCode: 200,
-          requestOptions: RequestOptions(path: ''),
+          requestOptions: RequestOptions(),
         ),
       );
 
@@ -91,7 +91,7 @@ void main() {
       ).thenAnswer(
         (_) async => Response<String>(
           statusCode: 204,
-          requestOptions: RequestOptions(path: ''),
+          requestOptions: RequestOptions(),
         ),
       );
 
@@ -109,7 +109,7 @@ void main() {
       ).thenAnswer(
         (_) async => Response<String>(
           statusCode: 204,
-          requestOptions: RequestOptions(path: ''),
+          requestOptions: RequestOptions(),
         ),
       );
 

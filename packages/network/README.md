@@ -10,7 +10,7 @@ Network connectivity and HTTP client utilities for the Coffee Maker app.
 ## Usage
 
 ```dart
-import 'package:network/network.dart';
+import 'package:network_new/network_new.dart';
 
 // Get connectivity status
 final connectivityCubit = getIt<ConnectivityCubit>();
@@ -24,7 +24,7 @@ final isOnline = await internetProber.checkOnline();
 ## Dependencies
 
 This package depends on:
-- `environment` package for configuration (probe timeout, endpoint)
+- `environment_new` package for configuration (probe timeout, endpoint)
 - Dio for making network requests
 - Connectivity Plus for network status monitoring
 
