@@ -55,11 +55,12 @@ extension HomeEventPatterns on HomeEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( FetchPhotosEvent value)?  fetchPhotos,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( FetchPhotosEvent value)?  fetchPhotos,TResult Function( ToggleFavoriteEvent value)?  toggleFavorite,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case FetchPhotosEvent() when fetchPhotos != null:
-return fetchPhotos(_that);case _:
+return fetchPhotos(_that);case ToggleFavoriteEvent() when toggleFavorite != null:
+return toggleFavorite(_that);case _:
   return orElse();
 
 }
@@ -77,11 +78,12 @@ return fetchPhotos(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( FetchPhotosEvent value)  fetchPhotos,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( FetchPhotosEvent value)  fetchPhotos,required TResult Function( ToggleFavoriteEvent value)  toggleFavorite,}){
 final _that = this;
 switch (_that) {
 case FetchPhotosEvent():
-return fetchPhotos(_that);case _:
+return fetchPhotos(_that);case ToggleFavoriteEvent():
+return toggleFavorite(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -98,11 +100,12 @@ return fetchPhotos(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( FetchPhotosEvent value)?  fetchPhotos,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( FetchPhotosEvent value)?  fetchPhotos,TResult? Function( ToggleFavoriteEvent value)?  toggleFavorite,}){
 final _that = this;
 switch (_that) {
 case FetchPhotosEvent() when fetchPhotos != null:
-return fetchPhotos(_that);case _:
+return fetchPhotos(_that);case ToggleFavoriteEvent() when toggleFavorite != null:
+return toggleFavorite(_that);case _:
   return null;
 
 }
@@ -119,10 +122,11 @@ return fetchPhotos(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  fetchPhotos,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  fetchPhotos,TResult Function( String id)?  toggleFavorite,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case FetchPhotosEvent() when fetchPhotos != null:
-return fetchPhotos();case _:
+return fetchPhotos();case ToggleFavoriteEvent() when toggleFavorite != null:
+return toggleFavorite(_that.id);case _:
   return orElse();
 
 }
@@ -140,10 +144,11 @@ return fetchPhotos();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  fetchPhotos,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  fetchPhotos,required TResult Function( String id)  toggleFavorite,}) {final _that = this;
 switch (_that) {
 case FetchPhotosEvent():
-return fetchPhotos();case _:
+return fetchPhotos();case ToggleFavoriteEvent():
+return toggleFavorite(_that.id);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -160,10 +165,11 @@ return fetchPhotos();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  fetchPhotos,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  fetchPhotos,TResult? Function( String id)?  toggleFavorite,}) {final _that = this;
 switch (_that) {
 case FetchPhotosEvent() when fetchPhotos != null:
-return fetchPhotos();case _:
+return fetchPhotos();case ToggleFavoriteEvent() when toggleFavorite != null:
+return toggleFavorite(_that.id);case _:
   return null;
 
 }
@@ -202,5 +208,71 @@ String toString() {
 
 
 
+
+/// @nodoc
+
+
+class ToggleFavoriteEvent implements HomeEvent {
+  const ToggleFavoriteEvent(this.id);
+  
+
+ final  String id;
+
+/// Create a copy of HomeEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ToggleFavoriteEventCopyWith<ToggleFavoriteEvent> get copyWith => _$ToggleFavoriteEventCopyWithImpl<ToggleFavoriteEvent>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ToggleFavoriteEvent&&(identical(other.id, id) || other.id == id));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,id);
+
+@override
+String toString() {
+  return 'HomeEvent.toggleFavorite(id: $id)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ToggleFavoriteEventCopyWith<$Res> implements $HomeEventCopyWith<$Res> {
+  factory $ToggleFavoriteEventCopyWith(ToggleFavoriteEvent value, $Res Function(ToggleFavoriteEvent) _then) = _$ToggleFavoriteEventCopyWithImpl;
+@useResult
+$Res call({
+ String id
+});
+
+
+
+
+}
+/// @nodoc
+class _$ToggleFavoriteEventCopyWithImpl<$Res>
+    implements $ToggleFavoriteEventCopyWith<$Res> {
+  _$ToggleFavoriteEventCopyWithImpl(this._self, this._then);
+
+  final ToggleFavoriteEvent _self;
+  final $Res Function(ToggleFavoriteEvent) _then;
+
+/// Create a copy of HomeEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? id = null,}) {
+  return _then(ToggleFavoriteEvent(
+null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
 
 // dart format on

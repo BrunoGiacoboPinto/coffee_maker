@@ -44,7 +44,12 @@ class _HomeViewState extends State<HomeView> {
           child: switch (state) {
             HomeLoadingState() ||
             HomeInitialState() => const _HomeViewLoading(),
-            HomeSuccessState() => _HomeViewSuccess(photos: state.photos),
+            HomeSuccessState() => _HomeViewSuccess(
+              photos: state.photos,
+              onToggleFavorite: (id) {
+                widget.homeBloc.add(ToggleFavoriteEvent(id));
+              },
+            ),
             HomeErrorState() => const SizedBox.expand(),
             _ => const _HomeViewLoading(),
           },
@@ -85,9 +90,13 @@ final class _HomeViewLoading extends StatelessWidget {
 }
 
 final class _HomeViewSuccess extends StatelessWidget {
-  const _HomeViewSuccess({required this.photos});
+  const _HomeViewSuccess({
+    required this.photos,
+    required this.onToggleFavorite,
+  });
 
   final List<CoffeePhotoData> photos;
+  final ValueChanged<String> onToggleFavorite;
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +114,10 @@ final class _HomeViewSuccess extends StatelessWidget {
         ],
       ),
       childrenDelegate: SliverChildBuilderDelegate(
-        (context, index) => CoffeePhotoCard(photo: photos[index]),
+        (context, index) => CoffeePhotoCard(
+          photo: photos[index],
+          onToggleFavorite: onToggleFavorite,
+        ),
         childCount: photos.length,
       ),
     );

@@ -14,6 +14,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
              : HomeState.success(coffeePhotosRepository.getCachedPhotos()),
        ) {
     on<FetchPhotosEvent>(_onFetchPhotos);
+    on<ToggleFavoriteEvent>(_onToggleFavorite);
   }
 
   late final _logger = Logger('HomeBloc');
@@ -23,7 +24,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     FetchPhotosEvent event,
     Emitter<HomeState> emit,
   ) async {
-    // Only show loading if we don't have photos yet
     if (state is! HomeSuccessState) {
       emit(const HomeState.loading());
     }
@@ -33,10 +33,17 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       emit(HomeState.success(photos));
     } catch (error, stackTrace) {
       _logger.severe('Error fetching photos: $error', error, stackTrace);
-      // Keep existing photos if available, otherwise show error
       if (state is! HomeSuccessState) {
         emit(HomeState.error(error.toString()));
       }
     }
+  }
+
+  Future<void> _onToggleFavorite(
+    ToggleFavoriteEvent event,
+    Emitter<HomeState> emit,
+  ) async {
+    await _coffeePhotosRepository.toggleFavorite(event.id);
+    emit(HomeState.success(_coffeePhotosRepository.getCachedPhotos()));
   }
 }
