@@ -1,5 +1,6 @@
 import 'package:coffee_maker/app/router/app_routes.dart';
 import 'package:coffee_maker/app/view/shell_navigation.dart';
+import 'package:coffee_maker/coffee_photo_details/coffee_photo_details.dart';
 import 'package:coffee_maker/di/injection.dart';
 import 'package:coffee_maker/favorites/favorites.dart';
 import 'package:coffee_maker/home/home.dart';
@@ -22,6 +23,17 @@ final GoRouter appRouter = GoRouter(
           name: AppRoutes.favorites.name,
           path: AppRoutes.favorites.path,
           builder: (context, state) => const FavoritesPage(),
+        ),
+        GoRoute(
+          name: AppRoutes.details.name,
+          path: AppRoutes.details.path,
+          builder: (context, state) {
+            final photoId = state.pathParameters['photoId']!;
+            return CoffeePhotoDetailsPage(
+              photoId: photoId,
+              bloc: getIt<CoffeePhotoDetailsBloc>(),
+            );
+          },
         ),
       ],
     ),

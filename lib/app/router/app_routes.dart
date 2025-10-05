@@ -1,6 +1,7 @@
 enum AppRoutes {
   home('/home'),
-  favorites('/favorites');
+  favorites('/favorites'),
+  details('/details/:photoId');
 
   const AppRoutes(this.path);
 
