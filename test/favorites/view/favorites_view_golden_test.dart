@@ -22,9 +22,9 @@ void main() {
         'renders FavoritesView loading state',
         tags: TestTag.golden,
         (tester) async {
-          tester.setupPathProviderMocks();
-          tester.setupDatabaseFactory();
-          tester.setupDatabaseFactory();
+          tester
+            ..setupPathProviderMocks()
+            ..setupDatabaseFactory();
           when(
             () => mockFavoritesBloc.state,
           ).thenReturn(const FavoritesState.loading());
@@ -48,9 +48,9 @@ void main() {
         'renders FavoritesView success state with photos',
         tags: TestTag.golden,
         (tester) async {
-          tester.setupPathProviderMocks();
-          tester.setupDatabaseFactory();
-          tester.setupDatabaseFactory();
+          tester
+            ..setupPathProviderMocks()
+            ..setupDatabaseFactory();
           final photos = TestDataFactory.createMockCoffeePhotoList(
             allFavorites: true,
           );
@@ -77,9 +77,9 @@ void main() {
         'renders FavoritesView success state with empty photos',
         tags: TestTag.golden,
         (tester) async {
-          tester.setupPathProviderMocks();
-          tester.setupDatabaseFactory();
-          tester.setupDatabaseFactory();
+          tester
+            ..setupPathProviderMocks()
+            ..setupDatabaseFactory();
           final emptyPhotos = TestDataFactory.createEmptyCoffeePhotoList();
           when(
             () => mockFavoritesBloc.state,
@@ -106,9 +106,9 @@ void main() {
         'renders FavoritesView loading state in dark theme',
         tags: TestTag.golden,
         (tester) async {
-          tester.setupPathProviderMocks();
-          tester.setupDatabaseFactory();
-          tester.setupDatabaseFactory();
+          tester
+            ..setupPathProviderMocks()
+            ..setupDatabaseFactory();
           when(
             () => mockFavoritesBloc.state,
           ).thenReturn(const FavoritesState.loading());
@@ -132,9 +132,9 @@ void main() {
         'renders FavoritesView success state with photos in dark theme',
         tags: TestTag.golden,
         (tester) async {
-          tester.setupPathProviderMocks();
-          tester.setupDatabaseFactory();
-          tester.setupDatabaseFactory();
+          tester
+            ..setupPathProviderMocks()
+            ..setupDatabaseFactory();
           final photos = TestDataFactory.createMockCoffeePhotoList(
             allFavorites: true,
           );
@@ -161,9 +161,9 @@ void main() {
         'renders FavoritesView success state with empty photos in dark theme',
         tags: TestTag.golden,
         (tester) async {
-          tester.setupPathProviderMocks();
-          tester.setupDatabaseFactory();
-          tester.setupDatabaseFactory();
+          tester
+            ..setupPathProviderMocks()
+            ..setupDatabaseFactory();
           final emptyPhotos = TestDataFactory.createEmptyCoffeePhotoList();
           when(
             () => mockFavoritesBloc.state,
