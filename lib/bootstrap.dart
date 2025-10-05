@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:coffee_maker/di/injection.dart';
-import 'package:coffee_maker/firebase_options.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -36,8 +34,6 @@ final class AppBlocObserver extends BlocObserver {
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   return Chain.capture<void>(
     () async {
-      WidgetsFlutterBinding.ensureInitialized();
-
       Logger.root.level = kDebugMode ? Level.ALL : Level.INFO;
       Logger.root.onRecord.listen(
         (record) {
@@ -45,10 +41,6 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
             print('${record.level.name}: ${record.time}: ${record.message}');
           }
         },
-      );
-
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
       );
 
       FlutterError.onError = (details) async {
