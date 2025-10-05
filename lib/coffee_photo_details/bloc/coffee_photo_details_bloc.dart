@@ -42,12 +42,17 @@ class CoffeePhotoDetailsBloc
     ToggleFavoriteEvent event,
     Emitter<CoffeePhotoDetailsState> emit,
   ) async {
-    final photo = await _coffeePhotosRepository.toggleFavorite(event.id);
-    if (photo == null) {
-      emit(const CoffeePhotoDetailsState.error('Photo not found'));
-      return;
-    }
+    try {
+      final photo = await _coffeePhotosRepository.toggleFavorite(event.id);
+      if (photo == null) {
+        emit(const CoffeePhotoDetailsState.error('Photo not found'));
+        return;
+      }
 
-    emit(CoffeePhotoDetailsState.success(photo));
+      emit(CoffeePhotoDetailsState.success(photo));
+    } catch (error, stackTrace) {
+      _logger.severe('Error toggling favorite: $error', error, stackTrace);
+      emit(CoffeePhotoDetailsState.error(error.toString()));
+    }
   }
 }
