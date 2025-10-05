@@ -105,6 +105,7 @@ final class _HomeViewSuccess extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.custom(
+      padding: const EdgeInsets.all(16),
       gridDelegate: SliverQuiltedGridDelegate(
         crossAxisCount: 4,
         mainAxisSpacing: 4,
