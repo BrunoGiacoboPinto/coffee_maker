@@ -55,13 +55,14 @@ extension HomeEventPatterns on HomeEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( FetchPhotosEvent value)?  fetchPhotos,TResult Function( ToggleFavoriteEvent value)?  toggleFavorite,TResult Function( PhotosUpdatedEvent value)?  photosUpdated,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( FetchPhotosEvent value)?  fetchPhotos,TResult Function( ToggleFavoriteEvent value)?  toggleFavorite,TResult Function( PhotosUpdatedEvent value)?  photosUpdated,TResult Function( LoadMorePhotosEvent value)?  loadMorePhotos,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case FetchPhotosEvent() when fetchPhotos != null:
 return fetchPhotos(_that);case ToggleFavoriteEvent() when toggleFavorite != null:
 return toggleFavorite(_that);case PhotosUpdatedEvent() when photosUpdated != null:
-return photosUpdated(_that);case _:
+return photosUpdated(_that);case LoadMorePhotosEvent() when loadMorePhotos != null:
+return loadMorePhotos(_that);case _:
   return orElse();
 
 }
@@ -79,13 +80,14 @@ return photosUpdated(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( FetchPhotosEvent value)  fetchPhotos,required TResult Function( ToggleFavoriteEvent value)  toggleFavorite,required TResult Function( PhotosUpdatedEvent value)  photosUpdated,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( FetchPhotosEvent value)  fetchPhotos,required TResult Function( ToggleFavoriteEvent value)  toggleFavorite,required TResult Function( PhotosUpdatedEvent value)  photosUpdated,required TResult Function( LoadMorePhotosEvent value)  loadMorePhotos,}){
 final _that = this;
 switch (_that) {
 case FetchPhotosEvent():
 return fetchPhotos(_that);case ToggleFavoriteEvent():
 return toggleFavorite(_that);case PhotosUpdatedEvent():
-return photosUpdated(_that);case _:
+return photosUpdated(_that);case LoadMorePhotosEvent():
+return loadMorePhotos(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -102,13 +104,14 @@ return photosUpdated(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( FetchPhotosEvent value)?  fetchPhotos,TResult? Function( ToggleFavoriteEvent value)?  toggleFavorite,TResult? Function( PhotosUpdatedEvent value)?  photosUpdated,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( FetchPhotosEvent value)?  fetchPhotos,TResult? Function( ToggleFavoriteEvent value)?  toggleFavorite,TResult? Function( PhotosUpdatedEvent value)?  photosUpdated,TResult? Function( LoadMorePhotosEvent value)?  loadMorePhotos,}){
 final _that = this;
 switch (_that) {
 case FetchPhotosEvent() when fetchPhotos != null:
 return fetchPhotos(_that);case ToggleFavoriteEvent() when toggleFavorite != null:
 return toggleFavorite(_that);case PhotosUpdatedEvent() when photosUpdated != null:
-return photosUpdated(_that);case _:
+return photosUpdated(_that);case LoadMorePhotosEvent() when loadMorePhotos != null:
+return loadMorePhotos(_that);case _:
   return null;
 
 }
@@ -125,12 +128,13 @@ return photosUpdated(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  fetchPhotos,TResult Function( String id)?  toggleFavorite,TResult Function( List<CoffeePhotoData> photos)?  photosUpdated,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  fetchPhotos,TResult Function( String id)?  toggleFavorite,TResult Function( List<CoffeePhotoData> photos)?  photosUpdated,TResult Function()?  loadMorePhotos,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case FetchPhotosEvent() when fetchPhotos != null:
 return fetchPhotos();case ToggleFavoriteEvent() when toggleFavorite != null:
 return toggleFavorite(_that.id);case PhotosUpdatedEvent() when photosUpdated != null:
-return photosUpdated(_that.photos);case _:
+return photosUpdated(_that.photos);case LoadMorePhotosEvent() when loadMorePhotos != null:
+return loadMorePhotos();case _:
   return orElse();
 
 }
@@ -148,12 +152,13 @@ return photosUpdated(_that.photos);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  fetchPhotos,required TResult Function( String id)  toggleFavorite,required TResult Function( List<CoffeePhotoData> photos)  photosUpdated,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  fetchPhotos,required TResult Function( String id)  toggleFavorite,required TResult Function( List<CoffeePhotoData> photos)  photosUpdated,required TResult Function()  loadMorePhotos,}) {final _that = this;
 switch (_that) {
 case FetchPhotosEvent():
 return fetchPhotos();case ToggleFavoriteEvent():
 return toggleFavorite(_that.id);case PhotosUpdatedEvent():
-return photosUpdated(_that.photos);case _:
+return photosUpdated(_that.photos);case LoadMorePhotosEvent():
+return loadMorePhotos();case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -170,12 +175,13 @@ return photosUpdated(_that.photos);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  fetchPhotos,TResult? Function( String id)?  toggleFavorite,TResult? Function( List<CoffeePhotoData> photos)?  photosUpdated,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  fetchPhotos,TResult? Function( String id)?  toggleFavorite,TResult? Function( List<CoffeePhotoData> photos)?  photosUpdated,TResult? Function()?  loadMorePhotos,}) {final _that = this;
 switch (_that) {
 case FetchPhotosEvent() when fetchPhotos != null:
 return fetchPhotos();case ToggleFavoriteEvent() when toggleFavorite != null:
 return toggleFavorite(_that.id);case PhotosUpdatedEvent() when photosUpdated != null:
-return photosUpdated(_that.photos);case _:
+return photosUpdated(_that.photos);case LoadMorePhotosEvent() when loadMorePhotos != null:
+return loadMorePhotos();case _:
   return null;
 
 }
@@ -352,5 +358,37 @@ as List<CoffeePhotoData>,
 
 
 }
+
+/// @nodoc
+
+
+class LoadMorePhotosEvent implements HomeEvent {
+  const LoadMorePhotosEvent();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoadMorePhotosEvent);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'HomeEvent.loadMorePhotos()';
+}
+
+
+}
+
+
+
 
 // dart format on

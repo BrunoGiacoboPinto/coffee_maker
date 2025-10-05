@@ -9,4 +9,5 @@ class HomeEvent with _$HomeEvent {
   const factory HomeEvent.toggleFavorite(String id) = ToggleFavoriteEvent;
   const factory HomeEvent.photosUpdated(List<CoffeePhotoData> photos) =
       PhotosUpdatedEvent;
+  const factory HomeEvent.loadMorePhotos() = LoadMorePhotosEvent;
 }

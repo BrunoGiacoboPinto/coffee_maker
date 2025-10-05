@@ -7,7 +7,10 @@ part 'home_state.freezed.dart';
 class HomeState with _$HomeState {
   const factory HomeState.initial() = HomeInitialState;
   const factory HomeState.loading() = HomeLoadingState;
-  const factory HomeState.success(List<CoffeePhotoData> photos) =
-      HomeSuccessState;
+  const factory HomeState.success(
+    List<CoffeePhotoData> photos, {
+    @Default(false) bool hasReachedMax,
+    @Default(false) bool isLoadingMore,
+  }) = HomeSuccessState;
   const factory HomeState.error(String message) = HomeErrorState;
 }

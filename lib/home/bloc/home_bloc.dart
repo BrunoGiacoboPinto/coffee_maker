@@ -18,6 +18,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<FetchPhotosEvent>(_onFetchPhotos);
     on<ToggleFavoriteEvent>(_onToggleFavorite);
     on<PhotosUpdatedEvent>(_onPhotosUpdated);
+    on<LoadMorePhotosEvent>(_onLoadMorePhotos);
 
     _photosSubscription = _coffeePhotosRepository.photosStream.listen((photos) {
       add(HomeEvent.photosUpdated(photos));
@@ -27,6 +28,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   late final _logger = Logger('HomeBloc');
   final CoffeePhotosRepository _coffeePhotosRepository;
   late final StreamSubscription<List<CoffeePhotoData>> _photosSubscription;
+  int _currentBatch = 0;
+  static const int _batchSize = 15;
 
   Future<void> _onFetchPhotos(
     FetchPhotosEvent event,
@@ -37,6 +40,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
 
     try {
+      _currentBatch = 0;
       final photos = await _coffeePhotosRepository.getCoffeePhotos();
       emit(HomeState.success(photos));
     } catch (error, stackTrace) {
@@ -61,6 +65,45 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) async {
     if (state is HomeSuccessState) {
       emit(HomeState.success(event.photos));
+    }
+  }
+
+  Future<void> _onLoadMorePhotos(
+    LoadMorePhotosEvent event,
+    Emitter<HomeState> emit,
+  ) async {
+    final currentState = state;
+    if (currentState is! HomeSuccessState ||
+        currentState.isLoadingMore ||
+        currentState.hasReachedMax) {
+      return;
+    }
+
+    emit(currentState.copyWith(isLoadingMore: true));
+
+    try {
+      _currentBatch++;
+      final newPhotos = await _coffeePhotosRepository.getCoffeePhotos(
+        count: _batchSize,
+      );
+
+      final allPhotos = [...currentState.photos, ...newPhotos];
+      final hasReachedMax = newPhotos.length < _batchSize;
+
+      _logger.info(
+        'Loaded batch $_currentBatch: ${newPhotos.length} photos, '
+        'total: ${allPhotos.length}',
+      );
+
+      emit(
+        HomeState.success(
+          allPhotos,
+          hasReachedMax: hasReachedMax,
+        ),
+      );
+    } catch (error, stackTrace) {
+      _logger.severe('Error loading more photos: $error', error, stackTrace);
+      emit(currentState.copyWith(isLoadingMore: false));
     }
   }
 

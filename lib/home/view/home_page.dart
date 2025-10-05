@@ -51,6 +51,10 @@ class _HomeViewState extends State<HomeView> {
                 widget.homeBloc.add(ToggleFavoriteEvent(id));
               },
               onTap: (id) => context.push('/details/$id'),
+              onLoadMore: () {
+                widget.homeBloc.add(const LoadMorePhotosEvent());
+              },
+              isLoadingMore: state.isLoadingMore,
             ),
             HomeErrorState() => const SizedBox.expand(),
             _ => const _HomeViewLoading(),
@@ -91,41 +95,85 @@ final class _HomeViewLoading extends StatelessWidget {
   }
 }
 
-final class _HomeViewSuccess extends StatelessWidget {
+final class _HomeViewSuccess extends StatefulWidget {
   const _HomeViewSuccess({
     required this.photos,
     required this.onToggleFavorite,
     required this.onTap,
+    required this.onLoadMore,
+    required this.isLoadingMore,
   });
 
   final List<CoffeePhotoData> photos;
   final ValueChanged<String> onToggleFavorite;
   final ValueChanged<String> onTap;
+  final VoidCallback onLoadMore;
+  final bool isLoadingMore;
+
+  @override
+  State<_HomeViewSuccess> createState() => _HomeViewSuccessState();
+}
+
+class _HomeViewSuccessState extends State<_HomeViewSuccess> {
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController()..addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.8) {
+      widget.onLoadMore();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GridView.custom(
-      padding: const EdgeInsets.all(16),
-      gridDelegate: SliverQuiltedGridDelegate(
-        crossAxisCount: 4,
-        mainAxisSpacing: 4,
-        crossAxisSpacing: 4,
-        repeatPattern: QuiltedGridRepeatPattern.inverted,
-        pattern: const [
-          QuiltedGridTile(2, 2),
-          QuiltedGridTile(1, 1),
-          QuiltedGridTile(1, 1),
-          QuiltedGridTile(1, 2),
-        ],
-      ),
-      childrenDelegate: SliverChildBuilderDelegate(
-        (context, index) => CoffeePhotoCard(
-          photo: photos[index],
-          onToggleFavorite: onToggleFavorite,
-          onTap: onTap,
+    return Column(
+      children: [
+        Expanded(
+          child: GridView.custom(
+            controller: _scrollController,
+            padding: const EdgeInsets.all(16),
+            gridDelegate: SliverQuiltedGridDelegate(
+              crossAxisCount: 4,
+              mainAxisSpacing: 4,
+              crossAxisSpacing: 4,
+              repeatPattern: QuiltedGridRepeatPattern.inverted,
+              pattern: const [
+                QuiltedGridTile(2, 2),
+                QuiltedGridTile(1, 1),
+                QuiltedGridTile(1, 1),
+                QuiltedGridTile(1, 2),
+              ],
+            ),
+            childrenDelegate: SliverChildBuilderDelegate(
+              (context, index) => CoffeePhotoCard(
+                photo: widget.photos[index],
+                onToggleFavorite: widget.onToggleFavorite,
+                onTap: widget.onTap,
+              ),
+              childCount: widget.photos.length,
+            ),
+          ),
         ),
-        childCount: photos.length,
-      ),
+        if (widget.isLoadingMore)
+          const Padding(
+            padding: EdgeInsets.all(16),
+            child: CircularProgressIndicator(),
+          ),
+      ],
     );
   }
 }

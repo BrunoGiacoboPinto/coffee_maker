@@ -128,12 +128,12 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<CoffeePhotoData> photos)?  success,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<CoffeePhotoData> photos,  bool hasReachedMax,  bool isLoadingMore)?  success,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case HomeInitialState() when initial != null:
 return initial();case HomeLoadingState() when loading != null:
 return loading();case HomeSuccessState() when success != null:
-return success(_that.photos);case HomeErrorState() when error != null:
+return success(_that.photos,_that.hasReachedMax,_that.isLoadingMore);case HomeErrorState() when error != null:
 return error(_that.message);case _:
   return orElse();
 
@@ -152,12 +152,12 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<CoffeePhotoData> photos)  success,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<CoffeePhotoData> photos,  bool hasReachedMax,  bool isLoadingMore)  success,required TResult Function( String message)  error,}) {final _that = this;
 switch (_that) {
 case HomeInitialState():
 return initial();case HomeLoadingState():
 return loading();case HomeSuccessState():
-return success(_that.photos);case HomeErrorState():
+return success(_that.photos,_that.hasReachedMax,_that.isLoadingMore);case HomeErrorState():
 return error(_that.message);case _:
   throw StateError('Unexpected subclass');
 
@@ -175,12 +175,12 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<CoffeePhotoData> photos)?  success,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<CoffeePhotoData> photos,  bool hasReachedMax,  bool isLoadingMore)?  success,TResult? Function( String message)?  error,}) {final _that = this;
 switch (_that) {
 case HomeInitialState() when initial != null:
 return initial();case HomeLoadingState() when loading != null:
 return loading();case HomeSuccessState() when success != null:
-return success(_that.photos);case HomeErrorState() when error != null:
+return success(_that.photos,_that.hasReachedMax,_that.isLoadingMore);case HomeErrorState() when error != null:
 return error(_that.message);case _:
   return null;
 
@@ -257,7 +257,7 @@ String toString() {
 
 
 class HomeSuccessState implements HomeState {
-  const HomeSuccessState(final  List<CoffeePhotoData> photos): _photos = photos;
+  const HomeSuccessState(final  List<CoffeePhotoData> photos, {this.hasReachedMax = false, this.isLoadingMore = false}): _photos = photos;
   
 
  final  List<CoffeePhotoData> _photos;
@@ -267,6 +267,8 @@ class HomeSuccessState implements HomeState {
   return EqualUnmodifiableListView(_photos);
 }
 
+@JsonKey() final  bool hasReachedMax;
+@JsonKey() final  bool isLoadingMore;
 
 /// Create a copy of HomeState
 /// with the given fields replaced by the non-null parameter values.
@@ -278,16 +280,16 @@ $HomeSuccessStateCopyWith<HomeSuccessState> get copyWith => _$HomeSuccessStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomeSuccessState&&const DeepCollectionEquality().equals(other._photos, _photos));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomeSuccessState&&const DeepCollectionEquality().equals(other._photos, _photos)&&(identical(other.hasReachedMax, hasReachedMax) || other.hasReachedMax == hasReachedMax)&&(identical(other.isLoadingMore, isLoadingMore) || other.isLoadingMore == isLoadingMore));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_photos));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_photos),hasReachedMax,isLoadingMore);
 
 @override
 String toString() {
-  return 'HomeState.success(photos: $photos)';
+  return 'HomeState.success(photos: $photos, hasReachedMax: $hasReachedMax, isLoadingMore: $isLoadingMore)';
 }
 
 
@@ -298,7 +300,7 @@ abstract mixin class $HomeSuccessStateCopyWith<$Res> implements $HomeStateCopyWi
   factory $HomeSuccessStateCopyWith(HomeSuccessState value, $Res Function(HomeSuccessState) _then) = _$HomeSuccessStateCopyWithImpl;
 @useResult
 $Res call({
- List<CoffeePhotoData> photos
+ List<CoffeePhotoData> photos, bool hasReachedMax, bool isLoadingMore
 });
 
 
@@ -315,10 +317,12 @@ class _$HomeSuccessStateCopyWithImpl<$Res>
 
 /// Create a copy of HomeState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? photos = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? photos = null,Object? hasReachedMax = null,Object? isLoadingMore = null,}) {
   return _then(HomeSuccessState(
 null == photos ? _self._photos : photos // ignore: cast_nullable_to_non_nullable
-as List<CoffeePhotoData>,
+as List<CoffeePhotoData>,hasReachedMax: null == hasReachedMax ? _self.hasReachedMax : hasReachedMax // ignore: cast_nullable_to_non_nullable
+as bool,isLoadingMore: null == isLoadingMore ? _self.isLoadingMore : isLoadingMore // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
