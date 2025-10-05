@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:injectable/injectable.dart';
 import 'package:logging/logging.dart';
 import 'package:network/src/cubit/internet_prober.dart';
 
@@ -12,7 +11,6 @@ enum ConnectivityStatus {
   noNetwork,
 }
 
-@injectable
 class ConnectivityCubit extends Cubit<ConnectivityStatus> {
   ConnectivityCubit(this._internetProber) : super(ConnectivityStatus.online);
 
