@@ -18,8 +18,9 @@ class CoffePhotoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final top = automaticallyImplyLeading ? 16.0 : 0.0;
-    return Stack(
+    final top = automaticallyImplyLeading ? 8.0 : 0.0;
+
+    final child = Stack(
       fit: StackFit.expand,
       children: [
         CachedNetworkImage(
@@ -67,5 +68,14 @@ class CoffePhotoView extends StatelessWidget {
           ),
       ],
     );
+
+    if (automaticallyImplyLeading) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: child,
+      );
+    } else {
+      return child;
+    }
   }
 }
