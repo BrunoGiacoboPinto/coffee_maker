@@ -1,5 +1,6 @@
 import 'package:coffee_maker/coffee_photo_details/coffee_photo_details.dart';
 import 'package:coffee_maker/di/injection.config.dart';
+import 'package:coffee_maker/favorites/bloc/favorites_bloc.dart';
 import 'package:coffee_maker/home/bloc/home_bloc.dart';
 import 'package:coffee_photos_repository/coffee_photos_repository.dart';
 import 'package:dio/dio.dart';
@@ -45,6 +46,11 @@ Future<void> configureDependencies() async {
     )
     ..registerFactory<HomeBloc>(
       () => HomeBloc(
+        coffeePhotosRepository: getIt<CoffeePhotosRepository>(),
+      ),
+    )
+    ..registerFactory<FavoritesBloc>(
+      () => FavoritesBloc(
         coffeePhotosRepository: getIt<CoffeePhotosRepository>(),
       ),
     )

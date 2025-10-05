@@ -22,7 +22,9 @@ final GoRouter appRouter = GoRouter(
         GoRoute(
           name: AppRoutes.favorites.name,
           path: AppRoutes.favorites.path,
-          builder: (context, state) => const FavoritesPage(),
+          builder: (context, state) => FavoritesPage(
+            favoritesBloc: getIt<FavoritesBloc>(),
+          ),
         ),
         GoRoute(
           name: AppRoutes.details.name,
