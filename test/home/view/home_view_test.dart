@@ -69,7 +69,6 @@ void main() {
           );
 
           expect(find.byType(CoffeePhotoCard), findsNWidgets(3));
-          // Note: Shimmer widgets are present because CachedNetworkImage shows placeholder when network fails in tests
           expect(find.byType(Shimmer), findsNWidgets(3));
         },
       );
@@ -161,15 +160,11 @@ void main() {
             HomeView(homeBloc: mockHomeBloc),
           );
 
-          // Initial state should show shimmer
           expect(find.byType(Shimmer), findsOneWidget);
 
-          // Wait for state transition
           await tester.pump(const Duration(seconds: 1));
 
-          // Success state should show photos
           expect(find.byType(CoffeePhotoCard), findsNWidgets(2));
-          // Note: Shimmer widgets are present because CachedNetworkImage shows placeholder when network fails in tests
           expect(find.byType(Shimmer), findsNWidgets(2));
         },
       );
