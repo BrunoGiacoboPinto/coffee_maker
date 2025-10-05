@@ -17,19 +17,16 @@ void main() {
       mockHomeBloc = MockHomeBloc();
     });
 
-    setUpAll(() {
-      // Set up path_provider mocking for CachedNetworkImage
-      TestWidgetsFlutterBinding.ensureInitialized();
-    });
+    setUpAll(TestWidgetsFlutterBinding.ensureInitialized);
 
     group('light theme', () {
       testWidgets(
         'renders HomeView loading state',
         tags: TestTag.golden,
         (tester) async {
-          tester.setupPathProviderMocks();
-          tester.setupDatabaseFactory();
-          tester.setupDatabaseFactory();
+          tester
+            ..setupPathProviderMocks()
+            ..setupDatabaseFactory();
           when(() => mockHomeBloc.state).thenReturn(const HomeState.loading());
           when(
             () => mockHomeBloc.stream,
@@ -51,9 +48,9 @@ void main() {
         'renders HomeView success state with photos',
         tags: TestTag.golden,
         (tester) async {
-          tester.setupPathProviderMocks();
-          tester.setupDatabaseFactory();
-          tester.setupDatabaseFactory();
+          tester
+            ..setupPathProviderMocks()
+            ..setupDatabaseFactory();
           final photos = TestDataFactory.createMockCoffeePhotoList(count: 4);
           when(() => mockHomeBloc.state).thenReturn(HomeState.success(photos));
           when(
@@ -76,9 +73,9 @@ void main() {
         'renders HomeView success state with empty photos',
         tags: TestTag.golden,
         (tester) async {
-          tester.setupPathProviderMocks();
-          tester.setupDatabaseFactory();
-          tester.setupDatabaseFactory();
+          tester
+            ..setupPathProviderMocks()
+            ..setupDatabaseFactory();
           final emptyPhotos = TestDataFactory.createEmptyCoffeePhotoList();
           when(
             () => mockHomeBloc.state,
@@ -103,9 +100,9 @@ void main() {
         'renders HomeView error state',
         tags: TestTag.golden,
         (tester) async {
-          tester.setupPathProviderMocks();
-          tester.setupDatabaseFactory();
-          tester.setupDatabaseFactory();
+          tester
+            ..setupPathProviderMocks()
+            ..setupDatabaseFactory();
           when(
             () => mockHomeBloc.state,
           ).thenReturn(const HomeState.error('Test error'));
@@ -131,9 +128,9 @@ void main() {
         'renders HomeView loading state in dark theme',
         tags: TestTag.golden,
         (tester) async {
-          tester.setupPathProviderMocks();
-          tester.setupDatabaseFactory();
-          tester.setupDatabaseFactory();
+          tester
+            ..setupPathProviderMocks()
+            ..setupDatabaseFactory();
           when(() => mockHomeBloc.state).thenReturn(const HomeState.loading());
           when(
             () => mockHomeBloc.stream,
@@ -155,9 +152,9 @@ void main() {
         'renders HomeView success state with photos in dark theme',
         tags: TestTag.golden,
         (tester) async {
-          tester.setupPathProviderMocks();
-          tester.setupDatabaseFactory();
-          tester.setupDatabaseFactory();
+          tester
+            ..setupPathProviderMocks()
+            ..setupDatabaseFactory();
           final photos = TestDataFactory.createMockCoffeePhotoList(count: 4);
           when(() => mockHomeBloc.state).thenReturn(HomeState.success(photos));
           when(
@@ -180,9 +177,9 @@ void main() {
         'renders HomeView success state with empty photos in dark theme',
         tags: TestTag.golden,
         (tester) async {
-          tester.setupPathProviderMocks();
-          tester.setupDatabaseFactory();
-          tester.setupDatabaseFactory();
+          tester
+            ..setupPathProviderMocks()
+            ..setupDatabaseFactory();
           final emptyPhotos = TestDataFactory.createEmptyCoffeePhotoList();
           when(
             () => mockHomeBloc.state,
@@ -207,9 +204,9 @@ void main() {
         'renders HomeView error state in dark theme',
         tags: TestTag.golden,
         (tester) async {
-          tester.setupPathProviderMocks();
-          tester.setupDatabaseFactory();
-          tester.setupDatabaseFactory();
+          tester
+            ..setupPathProviderMocks()
+            ..setupDatabaseFactory();
           when(
             () => mockHomeBloc.state,
           ).thenReturn(const HomeState.error('Test error'));
