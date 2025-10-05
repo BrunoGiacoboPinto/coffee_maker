@@ -1,33 +1,36 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
 import 'package:network/network.dart';
 
-class MockHttpClient extends Mock implements http.Client {}
-
-class MockHttpClientProvider extends Mock implements HttpClientProvider {}
+class MockDio extends Mock implements Dio {}
 
 void main() {
   group('InternetProber', () {
     late InternetProber prober;
-    late MockHttpClient mockClient;
-    late MockHttpClientProvider mockProvider;
+    late MockDio mockDio;
 
     setUpAll(() {
       registerFallbackValue(Uri.parse('https://example.com'));
     });
 
     setUp(() {
-      mockClient = MockHttpClient();
-      mockProvider = MockHttpClientProvider();
-      when(() => mockProvider.createClient()).thenReturn(mockClient);
-      prober = InternetProber(mockProvider);
+      mockDio = MockDio();
+      prober = InternetProber(mockDio);
     });
 
     test('returns true when endpoint responds with 204', () async {
       when(
-        () => mockClient.head(any()),
-      ).thenAnswer((_) async => http.Response('', 204));
+        () => mockDio.head<String>(
+          any(),
+          options: any(named: 'options'),
+        ),
+      ).thenAnswer(
+        (_) async => Response<String>(
+          statusCode: 204,
+          requestOptions: RequestOptions(path: ''),
+        ),
+      );
 
       final result = await prober.checkOnline();
 
@@ -36,8 +39,16 @@ void main() {
 
     test('returns false when endpoint responds with non-204 status', () async {
       when(
-        () => mockClient.head(any()),
-      ).thenAnswer((_) async => http.Response('', 200));
+        () => mockDio.head<String>(
+          any(),
+          options: any(named: 'options'),
+        ),
+      ).thenAnswer(
+        (_) async => Response<String>(
+          statusCode: 200,
+          requestOptions: RequestOptions(path: ''),
+        ),
+      );
 
       final result = await prober.checkOnline();
 
@@ -45,7 +56,12 @@ void main() {
     });
 
     test('returns false when request times out', () async {
-      when(() => mockClient.head(any())).thenThrow(Exception('Timeout'));
+      when(
+        () => mockDio.head<String>(
+          any(),
+          options: any(named: 'options'),
+        ),
+      ).thenThrow(Exception('Timeout'));
 
       final result = await prober.checkOnline();
 
@@ -53,7 +69,12 @@ void main() {
     });
 
     test('returns false when network error occurs', () async {
-      when(() => mockClient.head(any())).thenThrow(Exception('Network error'));
+      when(
+        () => mockDio.head<String>(
+          any(),
+          options: any(named: 'options'),
+        ),
+      ).thenThrow(Exception('Network error'));
 
       final result = await prober.checkOnline();
 
@@ -63,22 +84,43 @@ void main() {
     test('uses custom timeout when provided', () async {
       const customTimeout = Duration(seconds: 5);
       when(
-        () => mockClient.head(any()),
-      ).thenAnswer((_) async => http.Response('', 204));
+        () => mockDio.head<String>(
+          any(),
+          options: any(named: 'options'),
+        ),
+      ).thenAnswer(
+        (_) async => Response<String>(
+          statusCode: 204,
+          requestOptions: RequestOptions(path: ''),
+        ),
+      );
 
       final result = await prober.checkOnline(timeout: customTimeout);
 
       expect(result, isTrue);
     });
 
-    test('uses injected client', () async {
+    test('uses injected dio', () async {
       when(
-        () => mockClient.head(any()),
-      ).thenAnswer((_) async => http.Response('', 204));
+        () => mockDio.head<String>(
+          any(),
+          options: any(named: 'options'),
+        ),
+      ).thenAnswer(
+        (_) async => Response<String>(
+          statusCode: 204,
+          requestOptions: RequestOptions(path: ''),
+        ),
+      );
 
       await prober.checkOnline();
 
-      verify(() => mockClient.head(any())).called(1);
+      verify(
+        () => mockDio.head<String>(
+          any(),
+          options: any(named: 'options'),
+        ),
+      ).called(1);
     });
   });
 }

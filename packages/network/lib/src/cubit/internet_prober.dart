@@ -1,14 +1,10 @@
+import 'package:dio/dio.dart';
 import 'package:environment/environment.dart' as env;
-import 'package:http/http.dart' as http;
-import 'package:injectable/injectable.dart';
-import 'package:network/src/cubit/http_client_provider.dart';
 
-@lazySingleton
 class InternetProber {
-  InternetProber(this._httpClientProvider);
+  InternetProber(this._dio);
 
-  final HttpClientProvider _httpClientProvider;
-  late final http.Client client = _httpClientProvider.createClient();
+  final Dio _dio;
 
   static Duration get defaultTimeout =>
       const Duration(seconds: env.Environment.probeTimeout);
@@ -17,9 +13,13 @@ class InternetProber {
   Future<bool> checkOnline({Duration? timeout}) async {
     final effectiveTimeout = timeout ?? defaultTimeout;
     try {
-      final response = await client
-          .head(Uri.parse(defaultEndpoint))
-          .timeout(effectiveTimeout);
+      final response = await _dio.head<String>(
+        defaultEndpoint,
+        options: Options(
+          sendTimeout: effectiveTimeout,
+          receiveTimeout: effectiveTimeout,
+        ),
+      );
 
       return response.statusCode == 204;
     } on Exception {

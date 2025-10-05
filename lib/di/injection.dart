@@ -33,7 +33,6 @@ Future<void> configureDependencies() async {
     ..registerAdapter(CoffeePhotoDataAdapter());
 
   final photosBox = await Hive.openBox<CoffeePhotoData>(_kPhotosBoxName);
-  final httpClientProvider = HttpClientProvider();
 
   getIt
     ..registerLazySingleton<Dio>(() => dio)
@@ -60,9 +59,8 @@ Future<void> configureDependencies() async {
       ),
     )
     ..registerLazySingleton<Box<CoffeePhotoData>>(() => photosBox)
-    ..registerLazySingleton<HttpClientProvider>(() => httpClientProvider)
     ..registerLazySingleton<InternetProber>(
-      () => InternetProber(httpClientProvider),
+      () => InternetProber(getIt<Dio>()),
     )
     ..registerSingleton<ConnectivityCubit>(
       ConnectivityCubit(getIt<InternetProber>()),

@@ -5,8 +5,7 @@ Network connectivity and HTTP client utilities for the Coffee Maker app.
 ## Features
 
 - **ConnectivityCubit**: Monitors network connectivity status (online, offline, no network)
-- **InternetProber**: Checks actual internet connectivity by probing endpoints
-- **HttpClientProvider**: Provides HTTP client instances for network requests
+- **InternetProber**: Checks actual internet connectivity by probing endpoints using Dio
 
 ## Usage
 
@@ -20,19 +19,14 @@ await connectivityCubit.initialize();
 // Check internet connectivity
 final internetProber = getIt<InternetProber>();
 final isOnline = await internetProber.checkOnline();
-
-// Get HTTP client
-final httpProvider = getIt<HttpClientProvider>();
-final client = httpProvider.createClient();
 ```
 
 ## Dependencies
 
 This package depends on:
 - `environment` package for configuration (probe timeout, endpoint)
-- Injectable for dependency injection
+- Dio for making network requests
 - Connectivity Plus for network status monitoring
-- HTTP for making network requests
 
 ## Configuration
 
