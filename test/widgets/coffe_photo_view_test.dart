@@ -50,7 +50,8 @@ void main() {
       );
 
       testWidgets(
-        'renders CoffePhotoView with unfavorite icon when photo is not favorite',
+        'renders CoffePhotoView with unfavorite icon when photo is not '
+        'favorite',
         (tester) async {
           final photo = TestDataFactory.createMockCoffeePhotoData(
             id: 'test-photo',
@@ -70,7 +71,8 @@ void main() {
       );
 
       testWidgets(
-        'renders CoffePhotoView with back button when automaticallyImplyLeading is true',
+        'renders CoffePhotoView with back button when '
+        'automaticallyImplyLeading is true',
         (tester) async {
           final photo = TestDataFactory.createMockCoffeePhotoData(
             id: 'test-photo',
@@ -93,7 +95,8 @@ void main() {
       );
 
       testWidgets(
-        'renders CoffePhotoView without back button when automaticallyImplyLeading is false',
+        'renders CoffePhotoView without back button when '
+        'automaticallyImplyLeading is false',
         (tester) async {
           final photo = TestDataFactory.createMockCoffeePhotoData(
             id: 'test-photo',
