@@ -52,7 +52,7 @@ jobs:
   release:
     needs: [build, spell-check]
     runs-on: ubuntu-latest
-    if: (github.ref == 'refs/heads/main' && github.event_name == 'push') || (github.ref == 'refs/heads/develop' && github.event_name == 'workflow_dispatch')
+    if: (github.ref == 'refs/heads/main' && github.event_name == 'push') || (github.event_name == 'workflow_dispatch')
     permissions:
       contents: write
       issues: write
