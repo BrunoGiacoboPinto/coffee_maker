@@ -69,12 +69,12 @@ android {
         create("staging") {
             dimension = "default"
             applicationIdSuffix = ".stg"
-            manifestPlaceholders["appName"] = "[STG] Coffee Maker"
+            manifestPlaceholders["appName"] = "Coffee Maker"
         }
         create("development") {
             dimension = "default"
             applicationIdSuffix = ".dev"
-            manifestPlaceholders["appName"] = "[DEV] Coffee Maker"
+            manifestPlaceholders["appName"] = "Coffee Maker"
         }
     }
 
