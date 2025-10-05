@@ -15,7 +15,9 @@ final class ShellNavigationScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ConnectivityBanner(child: child),
+      body: ConnectivityBanner(
+        child: SafeArea(child: child),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _getCurrentIndex(context),
         onTap: (index) => _onTap(context, index),
