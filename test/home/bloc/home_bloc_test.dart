@@ -247,13 +247,6 @@ void main() {
       blocTest<HomeBloc, HomeState>(
         'should load more photos when not loading and not at max',
         build: () {
-          final initialPhotos = [
-            const CoffeePhotoData(
-              url: 'https://example.com/photo1.jpg',
-              id: 'photo1',
-              isFavorite: false,
-            ),
-          ];
           final morePhotos = [
             const CoffeePhotoData(
               url: 'https://example.com/photo2.jpg',
@@ -404,13 +397,15 @@ void main() {
               isFavorite: false,
             ),
           ], isLoadingMore: true),
-          const HomeState.success([
-            CoffeePhotoData(
-              url: 'https://example.com/photo1.jpg',
-              id: 'photo1',
-              isFavorite: false,
-            ),
-          ], isLoadingMore: false),
+          const HomeState.success(
+            [
+              CoffeePhotoData(
+                url: 'https://example.com/photo1.jpg',
+                id: 'photo1',
+                isFavorite: false,
+              ),
+            ],
+          ),
         ],
       );
     });
