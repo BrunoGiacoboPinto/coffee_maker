@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee_maker/l10n/l10n.dart';
 import 'package:coffee_photos_repository/coffee_photos_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 class CoffePhotoView extends StatelessWidget {
   const CoffePhotoView({
@@ -16,6 +18,8 @@ class CoffePhotoView extends StatelessWidget {
   final Widget? placeholder;
   final bool automaticallyImplyLeading;
 
+  static const _kDarkCoffeeColor = Color(0xFF4A2C2A);
+
   @override
   Widget build(BuildContext context) {
     final top = automaticallyImplyLeading ? 8.0 : 0.0;
@@ -29,7 +33,20 @@ class CoffePhotoView extends StatelessWidget {
           placeholder: (context, url) => placeholder ?? const SizedBox.shrink(),
           errorWidget: (context, url, error) => Container(
             color: Colors.grey[300],
-            child: const Icon(Icons.error, color: Colors.red),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.coffee_outlined, color: _kDarkCoffeeColor),
+                const Gap(8),
+                Text(
+                  context.l10n.photoLoadError,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: _kDarkCoffeeColor,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
         ),
         Positioned.fill(

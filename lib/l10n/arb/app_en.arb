@@ -23,5 +23,9 @@
     "favoritesLabel": "Favorites",
     "@favoritesLabel": {
         "description": "Label for the Favorites tab in bottom navigation"
+    },
+    "photoLoadError": "Could not load photo",
+    "@photoLoadError": {
+        "description": "Error message shown when a photo fails to load"
     }
 }

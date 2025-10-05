@@ -23,5 +23,9 @@
     "favoritesLabel": "Favoritos",
     "@favoritesLabel": {
         "description": "Etiqueta para la pestaña Favoritos en la navegación inferior"
+    },
+    "photoLoadError": "No se pudo cargar la foto",
+    "@photoLoadError": {
+        "description": "Mensaje de error mostrado cuando falla la carga de una foto"
     }
 }
