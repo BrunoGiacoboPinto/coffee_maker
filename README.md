@@ -10,6 +10,60 @@ A coffee image browser app.
 
 ---
 
+## Environment Configuration 🔧
+
+Before running the app, you need to set up the following environment variables. The app uses the [envied](https://pub.dev/packages/envied) package for type-safe environment configuration.
+
+### Quick Setup (Copy & Paste)
+
+Copy and paste this command to set all required environment variables:
+
+```bash
+export API_BASE_URL="https://coffee.alexflipnote.dev" && export CONNECT_TIMEOUT="30" && export RECEIVE_TIMEOUT="30" && export PROBE_TIMEOUT="3" && export PROBE_ENDPOINT="https://www.gstatic.com/generate_204"
+```
+
+### Individual Variables
+
+If you prefer to set them individually:
+
+```bash
+# API Configuration
+export API_BASE_URL="https://coffee.alexflipnote.dev"
+
+# Timeout Settings (in seconds)
+export CONNECT_TIMEOUT="30"
+export RECEIVE_TIMEOUT="30"
+export PROBE_TIMEOUT="3"
+
+# Connectivity Probe Endpoint
+export PROBE_ENDPOINT="https://www.gstatic.com/generate_204"
+```
+
+### Environment File Setup
+
+You can also create a `.env` file in your project root with these variables:
+
+```bash
+# .env file
+API_BASE_URL=https://coffee.alexflipnote.dev
+CONNECT_TIMEOUT=30
+RECEIVE_TIMEOUT=30
+PROBE_TIMEOUT=3
+PROBE_ENDPOINT=https://www.gstatic.com/generate_204
+```
+
+### Code Generation
+
+After setting up environment variables, regenerate the environment configuration:
+
+```bash
+cd packages/environment
+flutter pub get
+flutter pub run build_runner build --delete-conflicting-outputs
+```
+
+---
+
 ## Getting Started 🚀
 
 This project contains 3 flavors:
