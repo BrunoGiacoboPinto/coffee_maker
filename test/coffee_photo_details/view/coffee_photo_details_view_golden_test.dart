@@ -23,8 +23,9 @@ void main() {
         'renders CoffeePhotoDetailView loading state',
         tags: TestTag.golden,
         (tester) async {
-          tester.setupPathProviderMocks();
-          tester.setupDatabaseFactory();
+          tester
+            ..setupPathProviderMocks()
+            ..setupDatabaseFactory();
           when(
             () => mockBloc.state,
           ).thenReturn(const CoffeePhotoDetailsState.loading());
@@ -48,9 +49,9 @@ void main() {
         'renders CoffeePhotoDetailView success state',
         tags: TestTag.golden,
         (tester) async {
-          tester.setupPathProviderMocks();
-          tester.setupDatabaseFactory();
-          tester.setupDatabaseFactory();
+          tester
+            ..setupPathProviderMocks()
+            ..setupDatabaseFactory();
           final photo = TestDataFactory.createMockCoffeePhotoData(
             id: 'test-photo-id',
             url: 'https://example.com/test-photo.jpg',
@@ -81,9 +82,9 @@ void main() {
         'renders CoffeePhotoDetailView loading state in dark theme',
         tags: TestTag.golden,
         (tester) async {
-          tester.setupPathProviderMocks();
-          tester.setupDatabaseFactory();
-          tester.setupDatabaseFactory();
+          tester
+            ..setupPathProviderMocks()
+            ..setupDatabaseFactory();
           when(
             () => mockBloc.state,
           ).thenReturn(const CoffeePhotoDetailsState.loading());
@@ -107,9 +108,9 @@ void main() {
         'renders CoffeePhotoDetailView success state in dark theme',
         tags: TestTag.golden,
         (tester) async {
-          tester.setupPathProviderMocks();
-          tester.setupDatabaseFactory();
-          tester.setupDatabaseFactory();
+          tester
+            ..setupPathProviderMocks()
+            ..setupDatabaseFactory();
           final photo = TestDataFactory.createMockCoffeePhotoData(
             id: 'test-photo-id',
             url: 'https://example.com/test-photo.jpg',
