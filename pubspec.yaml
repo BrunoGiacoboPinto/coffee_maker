@@ -47,6 +47,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   freezed: ^3.2.3
+  icons_launcher: ^3.0.3
   injectable_generator: ^2.6.2
   json_serializable: ^6.11.1
   mocktail: ^1.0.4

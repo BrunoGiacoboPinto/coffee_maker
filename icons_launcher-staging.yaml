@@ -1,0 +1,9 @@
+icons_launcher:
+  image_path: "assets/icon_stage.png"
+  platforms:
+    android:
+      enable: true
+      image_path: "assets/icon_stage.png"
+    ios:
+      enable: true
+      image_path: "assets/icon_stage.png"
