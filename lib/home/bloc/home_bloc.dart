@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:coffee_maker/home/bloc/home_event.dart';
 import 'package:coffee_maker/home/bloc/home_state.dart';
@@ -15,10 +17,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
        ) {
     on<FetchPhotosEvent>(_onFetchPhotos);
     on<ToggleFavoriteEvent>(_onToggleFavorite);
+    on<PhotosUpdatedEvent>(_onPhotosUpdated);
+
+    _photosSubscription = _coffeePhotosRepository.photosStream.listen((photos) {
+      add(HomeEvent.photosUpdated(photos));
+    });
   }
 
   late final _logger = Logger('HomeBloc');
   final CoffeePhotosRepository _coffeePhotosRepository;
+  late final StreamSubscription<List<CoffeePhotoData>> _photosSubscription;
 
   Future<void> _onFetchPhotos(
     FetchPhotosEvent event,
@@ -45,5 +53,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) async {
     await _coffeePhotosRepository.toggleFavorite(event.id);
     emit(HomeState.success(_coffeePhotosRepository.getCachedPhotos()));
+  }
+
+  Future<void> _onPhotosUpdated(
+    PhotosUpdatedEvent event,
+    Emitter<HomeState> emit,
+  ) async {
+    if (state is HomeSuccessState) {
+      emit(HomeState.success(event.photos));
+    }
+  }
+
+  @override
+  Future<void> close() async {
+    await _photosSubscription.cancel();
+    return super.close();
   }
 }

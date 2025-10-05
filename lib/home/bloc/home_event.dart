@@ -1,3 +1,4 @@
+import 'package:coffee_photos_repository/coffee_photos_repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'home_event.freezed.dart';
@@ -6,4 +7,6 @@ part 'home_event.freezed.dart';
 class HomeEvent with _$HomeEvent {
   const factory HomeEvent.fetchPhotos() = FetchPhotosEvent;
   const factory HomeEvent.toggleFavorite(String id) = ToggleFavoriteEvent;
+  const factory HomeEvent.photosUpdated(List<CoffeePhotoData> photos) =
+      PhotosUpdatedEvent;
 }
