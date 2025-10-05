@@ -8,18 +8,15 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
   FavoritesBloc({
     required CoffeePhotosRepository coffeePhotosRepository,
   }) : _coffeePhotosRepository = coffeePhotosRepository,
-       super(const FavoritesState.initial()) {
+       super(
+         coffeePhotosRepository.hasCachedFavorites()
+             ? FavoritesState.success(
+                 coffeePhotosRepository.getCachedFavorites(),
+               )
+             : const FavoritesState.initial(),
+       ) {
     on<FetchFavoritesEvent>(_onFetchFavorites);
     on<ToggleFavoriteEvent>(_onToggleFavorite);
-
-    // Initialize with cached favorites if available
-    final cachedFavorites = _coffeePhotosRepository
-        .getCachedPhotos()
-        .where((photo) => photo.isFavorite)
-        .toList();
-    if (cachedFavorites.isNotEmpty) {
-      emit(FavoritesState.success(cachedFavorites));
-    }
   }
 
   late final _logger = Logger('FavoritesBloc');
@@ -29,7 +26,8 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
     FetchFavoritesEvent event,
     Emitter<FavoritesState> emit,
   ) async {
-    if (state is! FavoritesSuccessState) {
+    // Only show loading if we're coming from initial state
+    if (state is FavoritesInitialState) {
       emit(const FavoritesState.loading());
     }
 
@@ -49,7 +47,7 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
     Emitter<FavoritesState> emit,
   ) async {
     await _coffeePhotosRepository.toggleFavorite(event.id);
-    final favorites = await _coffeePhotosRepository.getFavoritePhotos();
+    final favorites = _coffeePhotosRepository.getCachedFavorites();
     emit(FavoritesState.success(favorites));
   }
 }

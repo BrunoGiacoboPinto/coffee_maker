@@ -93,6 +93,22 @@ class CoffeePhotosRepository {
     return _cache.values.toList(growable: false);
   }
 
+  /// Returns all favorite photos currently cached in memory.
+  ///
+  /// Returns a list of all [CoffeePhotoData] objects marked as favorites.
+  List<CoffeePhotoData> getCachedFavorites() {
+    return _cache.values
+        .where((photo) => photo.isFavorite)
+        .toList(growable: false);
+  }
+
+  /// Checks whether there are any favorite photos cached in memory.
+  ///
+  /// Returns true if at least one cached photo is marked as favorite.
+  bool hasCachedFavorites() {
+    return _cache.values.any((photo) => photo.isFavorite);
+  }
+
   String _extractPhotoId(CoffeePhotoResponse photo) {
     final url = Uri.parse(photo.file);
     return url.pathSegments.last.replaceAll('.jpg', '');
