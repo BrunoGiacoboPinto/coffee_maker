@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:coffee_maker/favorites/bloc/favorites_bloc.dart';
 import 'package:coffee_maker/favorites/bloc/favorites_event.dart';
@@ -26,6 +28,9 @@ void main() {
 
     setUp(() {
       mockRepository = _MockCoffeePhotosRepository();
+      when(() => mockRepository.photosStream).thenAnswer(
+        (_) => const Stream<List<CoffeePhotoData>>.empty(),
+      );
     });
 
     tearDown(() async {
