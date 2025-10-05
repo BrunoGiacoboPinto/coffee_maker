@@ -58,7 +58,6 @@ void main() {
           );
 
           expect(find.byType(CoffeePhotoCard), findsNWidgets(3));
-          // Note: Shimmer widgets are present because CachedNetworkImage shows placeholder when network fails in tests
           expect(find.byType(Shimmer), findsNWidgets(3));
           expect(find.text('No favorites yet'), findsNothing);
         },
