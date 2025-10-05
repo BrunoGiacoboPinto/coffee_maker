@@ -1,0 +1,44 @@
+{
+  "branches": [
+    "main"
+  ],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "CHANGELOG.md"
+      }
+    ],
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "cd tools/version_manager && dart pub get && dart run version_manager --version ${nextRelease.version}",
+        "publishCmd": "echo 'APK_PATH=build/app/outputs/flutter-apk/coffee-maker-production-release-${nextRelease.version}.apk' >> $GITHUB_ENV"
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": [
+          "CHANGELOG.md",
+          "pubspec.yaml",
+          "packages/*/pubspec.yaml"
+        ],
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          {
+            "path": "build/app/outputs/flutter-apk/coffee-maker-production-release-*.apk",
+            "label": "Android APK"
+          }
+        ]
+      }
+    ]
+  ]
+}

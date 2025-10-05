@@ -4,12 +4,6 @@ import 'package:flutter/material.dart';
 
 /*
  TODO:
-  - Convert packages to use very_good cli
-  - Add unit tests
-  - Improve overall animations
-  - Improve splash / Icons / Images
-  - Improve UI/UX
-  - Improve firebase config
   - Improve logs
   - Add semantic release and automatic release
 */

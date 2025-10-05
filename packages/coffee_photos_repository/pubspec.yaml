@@ -1,6 +1,6 @@
 name: coffee_photos_repository
 description: The data layer to load beautiful coffee photos
-version: 0.1.0+1
+version: 1.0.1+3
 publish_to: none
 
 environment:

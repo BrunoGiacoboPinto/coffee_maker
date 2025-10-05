@@ -115,3 +115,16 @@ app.*.map.json
 
 # Generated l10n files
 lib/l10n/gen/
+
+# Node.js dependencies for semantic-release
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Semantic release files
+.semrel.tmp/
+
+# Tools dependencies
+tools/**/build/
+tools/**/.dart_tool/

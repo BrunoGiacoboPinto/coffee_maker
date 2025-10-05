@@ -1,6 +1,6 @@
 name: coffee_maker
 description: A coffee image browser app.
-version: 1.0.0+1
+version: 1.0.1+3
 publish_to: none
 
 environment:
