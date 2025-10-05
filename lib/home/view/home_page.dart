@@ -6,6 +6,7 @@ import 'package:coffee_photos_repository/coffee_photos_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 
 final class HomePage extends StatelessWidget {
@@ -49,6 +50,7 @@ class _HomeViewState extends State<HomeView> {
               onToggleFavorite: (id) {
                 widget.homeBloc.add(ToggleFavoriteEvent(id));
               },
+              onTap: (id) => context.push('/details/$id'),
             ),
             HomeErrorState() => const SizedBox.expand(),
             _ => const _HomeViewLoading(),
@@ -93,10 +95,12 @@ final class _HomeViewSuccess extends StatelessWidget {
   const _HomeViewSuccess({
     required this.photos,
     required this.onToggleFavorite,
+    required this.onTap,
   });
 
   final List<CoffeePhotoData> photos;
   final ValueChanged<String> onToggleFavorite;
+  final ValueChanged<String> onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -117,6 +121,7 @@ final class _HomeViewSuccess extends StatelessWidget {
         (context, index) => CoffeePhotoCard(
           photo: photos[index],
           onToggleFavorite: onToggleFavorite,
+          onTap: onTap,
         ),
         childCount: photos.length,
       ),
