@@ -1,10 +1,21 @@
+import 'package:coffee_maker/coffee_photo_details/bloc/coffee_photo_details_bloc.dart';
 import 'package:coffee_maker/widgets/coffee_photo_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 
 import '../helpers/helpers.dart';
 
+class MockCoffeePhotoDetailsBloc extends Mock
+    implements CoffeePhotoDetailsBloc {}
+
 void main() {
+  late MockCoffeePhotoDetailsBloc mockDetailsBloc;
+
+  setUp(() {
+    mockDetailsBloc = MockCoffeePhotoDetailsBloc();
+  });
+
   group('CoffeePhotoCard', () {
     group('rendering', () {
       testWidgets(
@@ -20,14 +31,11 @@ void main() {
             CoffeePhotoCard(
               photo: photo,
               onToggleFavorite: (_) {},
+              detailsBloc: mockDetailsBloc,
             ),
           );
 
           expect(find.byType(CoffeePhotoCard), findsOneWidget);
-          expect(
-            find.byType(GestureDetector),
-            findsNWidgets(2),
-          ); // One from CoffeePhotoCard, one from IconButton
         },
       );
 
@@ -43,6 +51,7 @@ void main() {
             CoffeePhotoCard(
               photo: photo,
               onToggleFavorite: (_) {},
+              detailsBloc: mockDetailsBloc,
             ),
           );
 
@@ -63,6 +72,7 @@ void main() {
             CoffeePhotoCard(
               photo: photo,
               onToggleFavorite: (_) {},
+              detailsBloc: mockDetailsBloc,
             ),
           );
 
@@ -73,34 +83,6 @@ void main() {
     });
 
     group('interactions', () {
-      testWidgets(
-        'calls onTap callback when tapped',
-        (tester) async {
-          final photo = TestDataFactory.createMockCoffeePhotoData(
-            id: 'test-photo',
-          );
-          var onTapCalled = false;
-          String? tappedPhotoId;
-
-          await tester.pumpApp(
-            CoffeePhotoCard(
-              photo: photo,
-              onToggleFavorite: (_) {},
-              onTap: (id) {
-                onTapCalled = true;
-                tappedPhotoId = id;
-              },
-            ),
-          );
-
-          await tester.tap(find.byType(CoffeePhotoCard));
-          await tester.pump();
-
-          expect(onTapCalled, isTrue);
-          expect(tappedPhotoId, equals('test-photo'));
-        },
-      );
-
       testWidgets(
         'calls onToggleFavorite callback when favorite icon is tapped',
         (tester) async {
@@ -117,6 +99,7 @@ void main() {
                 onToggleFavoriteCalled = true;
                 toggledPhotoId = id;
               },
+              detailsBloc: mockDetailsBloc,
             ),
           );
 
@@ -125,28 +108,6 @@ void main() {
 
           expect(onToggleFavoriteCalled, isTrue);
           expect(toggledPhotoId, equals('test-photo'));
-        },
-      );
-
-      testWidgets(
-        'does not call onTap when onTap is null',
-        (tester) async {
-          final photo = TestDataFactory.createMockCoffeePhotoData(
-            id: 'test-photo',
-          );
-
-          await tester.pumpApp(
-            CoffeePhotoCard(
-              photo: photo,
-              onToggleFavorite: (_) {},
-            ),
-          );
-
-          await tester.tap(find.byType(CoffeePhotoCard));
-          await tester.pump();
-
-          // Should not throw any exceptions
-          expect(find.byType(CoffeePhotoCard), findsOneWidget);
         },
       );
     });

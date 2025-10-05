@@ -5,10 +5,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
+import 'injection.dart';
+
 extension PumpApp on WidgetTester {
   static bool _databaseFactoryInitialized = false;
 
-  Future<void> pumpApp(Widget widget) {
+  Future<void> pumpApp(Widget widget) async {
+    await configureTestDependencies();
     return pumpWidget(
       MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -23,7 +26,8 @@ extension PumpApp on WidgetTester {
     Widget widget, {
     ThemeData? theme,
     ThemeData? darkTheme,
-  }) {
+  }) async {
+    await configureTestDependencies();
     return pumpWidget(
       MaterialApp(
         theme: theme ?? ThemeData(useMaterial3: true),
@@ -36,7 +40,8 @@ extension PumpApp on WidgetTester {
   }
 
   /// Pumps a widget with GoRouter for testing navigation.
-  Future<void> pumpAppWithRouter(Widget widget) {
+  Future<void> pumpAppWithRouter(Widget widget) async {
+    await configureTestDependencies();
     final router = GoRouter(
       initialLocation: '/',
       routes: [

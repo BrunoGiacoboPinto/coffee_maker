@@ -1,9 +1,10 @@
+import 'package:coffee_maker/coffee_photo_details/bloc/coffee_photo_details_bloc.dart';
+import 'package:coffee_maker/di/injection.dart';
 import 'package:coffee_maker/favorites/favorites.dart';
 import 'package:coffee_maker/widgets/coffee_photo_card.dart';
 import 'package:coffee_photos_repository/coffee_photos_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 
 final class FavoritesPage extends StatelessWidget {
@@ -51,7 +52,6 @@ class _FavoritesViewState extends State<FavoritesView> {
                       onToggleFavorite: (id) {
                         widget.favoritesBloc.add(ToggleFavoriteEvent(id));
                       },
-                      onTap: (id) => context.push('/details/$id'),
                     ),
             FavoritesErrorState() => const SizedBox.expand(),
             _ => const _FavoritesViewLoading(),
@@ -127,12 +127,10 @@ final class _FavoritesViewSuccess extends StatelessWidget {
   const _FavoritesViewSuccess({
     required this.photos,
     required this.onToggleFavorite,
-    required this.onTap,
   });
 
   final List<CoffeePhotoData> photos;
   final ValueChanged<String> onToggleFavorite;
-  final ValueChanged<String> onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +143,7 @@ final class _FavoritesViewSuccess extends StatelessWidget {
           child: CoffeePhotoCard(
             photo: photos[index],
             onToggleFavorite: onToggleFavorite,
-            onTap: onTap,
+            detailsBloc: getIt<CoffeePhotoDetailsBloc>(),
           ),
         ),
       ),

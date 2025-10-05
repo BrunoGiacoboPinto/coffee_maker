@@ -1,3 +1,5 @@
+import 'package:coffee_maker/coffee_photo_details/bloc/coffee_photo_details_bloc.dart';
+import 'package:coffee_maker/di/injection.dart';
 import 'package:coffee_maker/home/bloc/home_event.dart';
 import 'package:coffee_maker/home/bloc/home_state.dart';
 import 'package:coffee_maker/home/home.dart';
@@ -6,7 +8,6 @@ import 'package:coffee_photos_repository/coffee_photos_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 
 final class HomePage extends StatelessWidget {
@@ -50,7 +51,6 @@ class _HomeViewState extends State<HomeView> {
               onToggleFavorite: (id) {
                 widget.homeBloc.add(ToggleFavoriteEvent(id));
               },
-              onTap: (id) => context.push('/details/$id'),
               onLoadMore: () {
                 widget.homeBloc.add(const LoadMorePhotosEvent());
               },
@@ -99,14 +99,12 @@ final class _HomeViewSuccess extends StatefulWidget {
   const _HomeViewSuccess({
     required this.photos,
     required this.onToggleFavorite,
-    required this.onTap,
     required this.onLoadMore,
     required this.isLoadingMore,
   });
 
   final List<CoffeePhotoData> photos;
   final ValueChanged<String> onToggleFavorite;
-  final ValueChanged<String> onTap;
   final VoidCallback onLoadMore;
   final bool isLoadingMore;
 
@@ -162,7 +160,7 @@ class _HomeViewSuccessState extends State<_HomeViewSuccess> {
               (context, index) => CoffeePhotoCard(
                 photo: widget.photos[index],
                 onToggleFavorite: widget.onToggleFavorite,
-                onTap: widget.onTap,
+                detailsBloc: getIt<CoffeePhotoDetailsBloc>(),
               ),
               childCount: widget.photos.length,
             ),
