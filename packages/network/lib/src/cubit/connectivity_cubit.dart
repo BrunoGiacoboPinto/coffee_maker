@@ -12,11 +12,13 @@ enum ConnectivityStatus {
 }
 
 class ConnectivityCubit extends Cubit<ConnectivityStatus> {
-  ConnectivityCubit(this._internetProber) : super(ConnectivityStatus.online);
+  ConnectivityCubit(this._internetProber, [Connectivity? connectivity])
+    : _connectivity = connectivity ?? Connectivity(),
+      super(ConnectivityStatus.online);
 
   final InternetProber _internetProber;
   late final Logger _logger = Logger('ConnectivityCubit');
-  final Connectivity _connectivity = Connectivity();
+  final Connectivity _connectivity;
 
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
   Timer? _recheckTimer;
