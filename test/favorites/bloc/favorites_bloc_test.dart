@@ -72,7 +72,8 @@ void main() {
       });
 
       blocTest<FavoritesBloc, FavoritesState>(
-        'should emit loading then success when favorites are fetched successfully',
+        'should emit loading then success when favorites are fetched '
+        'successfully',
         build: () {
           final favorites = [
             const CoffeePhotoData(
@@ -148,10 +149,11 @@ void main() {
             () => mockRepository.getFavoritePhotos(),
           ).thenThrow(Exception('Network error'));
 
+          // ignore: discarded_futures - Close is called in test setup, future is intentionally discarded
           favoritesBloc.close();
-          favoritesBloc = FavoritesBloc(coffeePhotosRepository: mockRepository);
-
-          return favoritesBloc;
+          return favoritesBloc = FavoritesBloc(
+            coffeePhotosRepository: mockRepository,
+          );
         },
         act: (bloc) => bloc.add(const FavoritesEvent.fetchFavorites()),
         expect: () => <FavoritesState>[],
@@ -178,10 +180,11 @@ void main() {
             () => mockRepository.getFavoritePhotos(),
           ).thenThrow(Exception('Network error'));
 
+          // ignore: discarded_futures - Close is called in test setup, future is intentionally discarded
           favoritesBloc.close();
-          favoritesBloc = FavoritesBloc(coffeePhotosRepository: mockRepository);
-
-          return favoritesBloc;
+          return favoritesBloc = FavoritesBloc(
+            coffeePhotosRepository: mockRepository,
+          );
         },
         act: (bloc) => bloc.add(const FavoritesEvent.fetchFavorites()),
         expect: () => <FavoritesState>[],

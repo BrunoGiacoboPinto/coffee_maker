@@ -6,10 +6,13 @@ import 'package:network/network.dart';
 
 class _MockInternetProber extends Mock implements InternetProber {}
 
+class _MockConnectivity extends Mock implements Connectivity {}
+
 void main() {
   group('ConnectivityCubit', () {
     late ConnectivityCubit cubit;
     late _MockInternetProber mockProber;
+    late _MockConnectivity mockConnectivity;
 
     setUpAll(() {
       TestWidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +21,8 @@ void main() {
 
     setUp(() {
       mockProber = _MockInternetProber();
-      cubit = ConnectivityCubit(mockProber);
+      mockConnectivity = _MockConnectivity();
+      cubit = ConnectivityCubit(mockProber, mockConnectivity);
     });
 
     tearDown(() async {
@@ -52,12 +56,16 @@ void main() {
       blocTest<ConnectivityCubit, ConnectivityStatus>(
         'should emit online when internet is available',
         build: () {
+          when(
+            () => mockConnectivity.checkConnectivity(),
+          ).thenAnswer((_) async => [ConnectivityResult.wifi]);
           when(() => mockProber.checkOnline()).thenAnswer((_) async => true);
           return cubit;
         },
         act: (cubit) => cubit.checkConnectivity(),
         expect: () => [ConnectivityStatus.online],
         verify: (_) {
+          verify(() => mockConnectivity.checkConnectivity()).called(1);
           verify(() => mockProber.checkOnline()).called(1);
         },
       );
@@ -65,12 +73,16 @@ void main() {
       blocTest<ConnectivityCubit, ConnectivityStatus>(
         'should emit offline when internet is not available',
         build: () {
+          when(
+            () => mockConnectivity.checkConnectivity(),
+          ).thenAnswer((_) async => [ConnectivityResult.wifi]);
           when(() => mockProber.checkOnline()).thenAnswer((_) async => false);
           return cubit;
         },
         act: (cubit) => cubit.checkConnectivity(),
         expect: () => [ConnectivityStatus.offline],
         verify: (_) {
+          verify(() => mockConnectivity.checkConnectivity()).called(1);
           verify(() => mockProber.checkOnline()).called(1);
         },
       );
@@ -79,6 +91,9 @@ void main() {
         'should emit noNetwork when connectivity check throws exception',
         build: () {
           when(
+            () => mockConnectivity.checkConnectivity(),
+          ).thenAnswer((_) async => [ConnectivityResult.wifi]);
+          when(
             () => mockProber.checkOnline(),
           ).thenThrow(Exception('Network error'));
           return cubit;
@@ -86,6 +101,7 @@ void main() {
         act: (cubit) => cubit.checkConnectivity(),
         expect: () => [ConnectivityStatus.noNetwork],
         verify: (_) {
+          verify(() => mockConnectivity.checkConnectivity()).called(1);
           verify(() => mockProber.checkOnline()).called(1);
         },
       );
@@ -93,6 +109,9 @@ void main() {
       blocTest<ConnectivityCubit, ConnectivityStatus>(
         'should emit noNetwork when connectivity results are empty',
         build: () {
+          when(
+            () => mockConnectivity.checkConnectivity(),
+          ).thenAnswer((_) async => [ConnectivityResult.wifi]);
           when(() => mockProber.checkOnline()).thenAnswer((_) async => false);
           return cubit;
         },
@@ -103,6 +122,9 @@ void main() {
       blocTest<ConnectivityCubit, ConnectivityStatus>(
         'should emit noNetwork when connectivity results are all none',
         build: () {
+          when(
+            () => mockConnectivity.checkConnectivity(),
+          ).thenAnswer((_) async => [ConnectivityResult.wifi]);
           when(() => mockProber.checkOnline()).thenAnswer((_) async => false);
           return cubit;
         },
@@ -115,6 +137,9 @@ void main() {
       blocTest<ConnectivityCubit, ConnectivityStatus>(
         'should transition from online to offline',
         build: () {
+          when(
+            () => mockConnectivity.checkConnectivity(),
+          ).thenAnswer((_) async => [ConnectivityResult.wifi]);
           when(() => mockProber.checkOnline()).thenAnswer((_) async => false);
           return cubit;
         },
@@ -125,6 +150,9 @@ void main() {
       blocTest<ConnectivityCubit, ConnectivityStatus>(
         'should transition from offline to online',
         build: () {
+          when(
+            () => mockConnectivity.checkConnectivity(),
+          ).thenAnswer((_) async => [ConnectivityResult.wifi]);
           when(() => mockProber.checkOnline()).thenAnswer((_) async => true);
           return cubit;
         },
@@ -135,6 +163,9 @@ void main() {
       blocTest<ConnectivityCubit, ConnectivityStatus>(
         'should transition from online to noNetwork on error',
         build: () {
+          when(
+            () => mockConnectivity.checkConnectivity(),
+          ).thenAnswer((_) async => [ConnectivityResult.wifi]);
           when(
             () => mockProber.checkOnline(),
           ).thenThrow(Exception('Network error'));
@@ -149,6 +180,9 @@ void main() {
       blocTest<ConnectivityCubit, ConnectivityStatus>(
         'should start recheck timer when offline',
         build: () {
+          when(
+            () => mockConnectivity.checkConnectivity(),
+          ).thenAnswer((_) async => [ConnectivityResult.wifi]);
           when(() => mockProber.checkOnline()).thenAnswer((_) async => false);
           return cubit;
         },
@@ -160,6 +194,9 @@ void main() {
       blocTest<ConnectivityCubit, ConnectivityStatus>(
         'should stop recheck timer when online',
         build: () {
+          when(
+            () => mockConnectivity.checkConnectivity(),
+          ).thenAnswer((_) async => [ConnectivityResult.wifi]);
           when(() => mockProber.checkOnline()).thenAnswer((_) async => true);
           return cubit;
         },
@@ -173,13 +210,17 @@ void main() {
         'should handle different types of exceptions',
         build: () {
           when(
+            () => mockConnectivity.checkConnectivity(),
+          ).thenAnswer((_) async => [ConnectivityResult.wifi]);
+          when(
             () => mockProber.checkOnline(),
-          ).thenThrow(ArgumentError('Invalid argument'));
+          ).thenThrow(Exception('Invalid argument'));
           return cubit;
         },
         act: (cubit) => cubit.checkConnectivity(),
         expect: () => [ConnectivityStatus.noNetwork],
         verify: (_) {
+          verify(() => mockConnectivity.checkConnectivity()).called(1);
           verify(() => mockProber.checkOnline()).called(1);
         },
       );
@@ -187,12 +228,16 @@ void main() {
       blocTest<ConnectivityCubit, ConnectivityStatus>(
         'should handle timeout exceptions',
         build: () {
+          when(
+            () => mockConnectivity.checkConnectivity(),
+          ).thenAnswer((_) async => [ConnectivityResult.wifi]);
           when(() => mockProber.checkOnline()).thenThrow(Exception('Timeout'));
           return cubit;
         },
         act: (cubit) => cubit.checkConnectivity(),
         expect: () => [ConnectivityStatus.noNetwork],
         verify: (_) {
+          verify(() => mockConnectivity.checkConnectivity()).called(1);
           verify(() => mockProber.checkOnline()).called(1);
         },
       );
@@ -215,6 +260,9 @@ void main() {
       blocTest<ConnectivityCubit, ConnectivityStatus>(
         'should handle rapid state changes',
         build: () {
+          when(
+            () => mockConnectivity.checkConnectivity(),
+          ).thenAnswer((_) async => [ConnectivityResult.wifi]);
           when(() => mockProber.checkOnline()).thenAnswer((_) async => true);
           return cubit;
         },
@@ -223,11 +271,9 @@ void main() {
           await Future<void>.delayed(const Duration(milliseconds: 10));
           await cubit.checkConnectivity();
         },
-        expect: () => [
-          ConnectivityStatus.online,
-          ConnectivityStatus.online,
-        ],
+        expect: () => [ConnectivityStatus.online],
         verify: (_) {
+          verify(() => mockConnectivity.checkConnectivity()).called(2);
           verify(() => mockProber.checkOnline()).called(2);
         },
       );
@@ -235,6 +281,9 @@ void main() {
       blocTest<ConnectivityCubit, ConnectivityStatus>(
         'should handle null connectivity results',
         build: () {
+          when(
+            () => mockConnectivity.checkConnectivity(),
+          ).thenAnswer((_) async => [ConnectivityResult.wifi]);
           when(() => mockProber.checkOnline()).thenAnswer((_) async => false);
           return cubit;
         },

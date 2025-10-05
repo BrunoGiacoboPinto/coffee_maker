@@ -226,7 +226,9 @@ void main() {
         },
         act: (bloc) =>
             bloc.add(const CoffeePhotoDetailsEvent.toggleFavorite('photo1')),
-        expect: () => <CoffeePhotoDetailsState>[],
+        expect: () => [
+          const CoffeePhotoDetailsState.error('Exception: Toggle error'),
+        ],
         verify: (_) {
           verify(() => mockRepository.toggleFavorite('photo1')).called(1);
         },
