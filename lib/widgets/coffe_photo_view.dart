@@ -1,0 +1,71 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee_photos_repository/coffee_photos_repository.dart';
+import 'package:flutter/material.dart';
+
+class CoffePhotoView extends StatelessWidget {
+  const CoffePhotoView({
+    required this.photo,
+    required this.onToggleFavorite,
+    this.placeholder,
+    this.automaticallyImplyLeading = false,
+    super.key,
+  });
+
+  final CoffeePhotoData photo;
+  final ValueChanged<String> onToggleFavorite;
+  final Widget? placeholder;
+  final bool automaticallyImplyLeading;
+
+  @override
+  Widget build(BuildContext context) {
+    final top = automaticallyImplyLeading ? 16.0 : 0.0;
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        CachedNetworkImage(
+          imageUrl: photo.url,
+          fit: BoxFit.cover,
+          placeholder: (context, url) => placeholder ?? const SizedBox.shrink(),
+          errorWidget: (context, url, error) => Container(
+            color: Colors.grey[300],
+            child: const Icon(Icons.error, color: Colors.red),
+          ),
+        ),
+        Positioned.fill(
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withValues(alpha: 0.3),
+                  Colors.transparent,
+                ],
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          top: top,
+          right: 0,
+          child: IconButton(
+            icon: Icon(
+              photo.isFavorite ? Icons.favorite : Icons.favorite_border,
+              color: photo.isFavorite ? Colors.red : Colors.white,
+            ),
+            onPressed: () => onToggleFavorite(photo.id),
+          ),
+        ),
+        if (automaticallyImplyLeading)
+          Positioned(
+            top: top,
+            left: 0,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
+      ],
+    );
+  }
+}
