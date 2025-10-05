@@ -10,7 +10,7 @@ part of 'environment.dart';
 // ignore_for_file: type=lint
 // generated_from: .env
 final class _Environment {
-  static const String apiBaseUrl = 'https://api.example.com';
+  static const String apiBaseUrl = 'https://coffee.alexflipnote.dev';
 
   static const int connectTimeout = 30;
 
