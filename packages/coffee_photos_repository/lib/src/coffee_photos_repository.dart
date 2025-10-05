@@ -24,6 +24,10 @@ class CoffeePhotosRepository {
 
   late final _logger = Logger('CoffeePhotosRepository');
 
+  /// Fetches coffee photos from the service and caches them locally.
+  ///
+  /// Returns a list of [CoffeePhotoData] objects.
+  /// [count] specifies how many photos to fetch (default: 30).
   Future<List<CoffeePhotoData>> getCoffeePhotos({int count = 30}) async {
     try {
       final photos = await Future.wait<CoffeePhotoResponse>([
@@ -48,6 +52,9 @@ class CoffeePhotosRepository {
     return _cache.values.toList(growable: false);
   }
 
+  /// Toggles the favorite status of a photo with the given [id].
+  ///
+  /// If the photo exists in cache, its favorite status will be flipped.
   Future<void> toggleFavorite(String id) async {
     if (_cache[id] case final photo?) {
       _cache[id] = photo.copyWith(isFavorite: !photo.isFavorite);
@@ -55,6 +62,9 @@ class CoffeePhotosRepository {
     }
   }
 
+  /// Retrieves a specific photo by its [id].
+  ///
+  /// Returns the [CoffeePhotoData] if found, null otherwise.
   Future<CoffeePhotoData?> getPhoto(String id) async {
     if (_cache[id] case final photo?) {
       return photo;
@@ -66,10 +76,16 @@ class CoffeePhotosRepository {
     return null;
   }
 
+  /// Returns a list of all photos marked as favorites.
+  ///
+  /// Returns an empty list if no favorites are found.
   Future<List<CoffeePhotoData>> getFavoritePhotos() async {
     return [..._cache.values.where((photo) => photo.isFavorite)];
   }
 
+  /// Returns all photos currently cached in memory.
+  ///
+  /// Returns a list of all [CoffeePhotoData] objects in the cache.
   List<CoffeePhotoData> getCachedPhotos() {
     return _cache.values.toList(growable: false);
   }
