@@ -1,0 +1,52 @@
+import 'package:coffee_maker/app/router/app_routes.dart';
+import 'package:coffee_maker/app/router/page_view_transition.dart';
+import 'package:coffee_maker/app/view/shell_navigation.dart';
+import 'package:coffee_maker/coffee_photo_details/coffee_photo_details.dart';
+import 'package:coffee_maker/di/injection.dart';
+import 'package:coffee_maker/favorites/favorites.dart';
+import 'package:coffee_maker/home/home.dart';
+import 'package:go_router/go_router.dart';
+
+final GoRouter appRouter = GoRouter(
+  initialLocation: AppRoutes.home.path,
+  routes: [
+    ShellRoute(
+      builder: (context, state, child) {
+        return ShellNavigationScaffold(child: child);
+      },
+      routes: [
+        GoRoute(
+          name: AppRoutes.home.name,
+          path: AppRoutes.home.path,
+          pageBuilder: (context, state) => StatefulPageViewTransitionPage(
+            key: state.pageKey,
+            routeIndex: AppRoutes.home.index,
+            child: HomePage(homeBloc: getIt<HomeBloc>()),
+          ),
+        ),
+        GoRoute(
+          name: AppRoutes.favorites.name,
+          path: AppRoutes.favorites.path,
+          pageBuilder: (context, state) => StatefulPageViewTransitionPage(
+            key: state.pageKey,
+            routeIndex: AppRoutes.favorites.index,
+            child: FavoritesPage(
+              favoritesBloc: getIt<FavoritesBloc>(),
+            ),
+          ),
+        ),
+        GoRoute(
+          name: AppRoutes.details.name,
+          path: AppRoutes.details.path,
+          builder: (context, state) {
+            final photoId = state.pathParameters['photoId']!;
+            return CoffeePhotoDetailsPage(
+              photoId: photoId,
+              bloc: getIt<CoffeePhotoDetailsBloc>(),
+            );
+          },
+        ),
+      ],
+    ),
+  ],
+);

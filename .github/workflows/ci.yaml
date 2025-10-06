@@ -1,0 +1,66 @@
+name: ci
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  semantic_pull_request:
+    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/semantic_pull_request.yml@v1
+
+  spell-check:
+    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/spell_check.yml@v1
+    with:
+      includes: "**/*.md"
+      modified_files_only: false
+
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - name: 📚 Git Checkout
+        uses: actions/checkout@v5
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.35.x"
+          channel: stable
+          cache: true
+          cache-key: flutter-:os:-:channel:-:version:-:arch:-:hash:-${{ hashFiles('**/pubspec.lock') }}
+
+      - name: 📦 Install Dependencies
+        run: |
+          flutter pub global activate very_good_cli
+          very_good packages get --recursive
+
+      - name: ✨ Check Formatting
+        run: dart format --set-exit-if-changed lib test
+
+      - name: 🕵️ Analyze
+        run: flutter analyze lib test
+
+      - name: 🧪 Run Tests (excluding golden tests)
+        run: flutter test --exclude-tags golden --coverage --test-randomize-ordering-seed random
+
+      - name: 🚫 Exclude Files from Coverage
+        run: dart run lcov_excluder exclude
+
+      - name: 📊 Check Code Coverage
+        uses: VeryGoodOpenSource/very_good_coverage@v3
+        with:
+          path: coverage/lcov.info
+          min_coverage: 90
+

@@ -3,5 +3,29 @@
     "counterAppBarTitle": "Contador",
     "@counterAppBarTitle": {
         "description": "Texto mostrado en la AppBar de la página del contador"
+    },
+    "offlineMessage": "Sin conexión a internet",
+    "@offlineMessage": {
+        "description": "Mensaje mostrado cuando está conectado a la red pero sin acceso a internet"
+    },
+    "noNetworkMessage": "No conectado a ninguna red",
+    "@noNetworkMessage": {
+        "description": "Mensaje mostrado cuando no hay interfaz de red conectada"
+    },
+    "retry": "Reintentar",
+    "@retry": {
+        "description": "Texto del botón para reintentar verificación de conectividad"
+    },
+    "homeLabel": "Inicio",
+    "@homeLabel": {
+        "description": "Etiqueta para la pestaña Inicio en la navegación inferior"
+    },
+    "favoritesLabel": "Favoritos",
+    "@favoritesLabel": {
+        "description": "Etiqueta para la pestaña Favoritos en la navegación inferior"
+    },
+    "photoLoadError": "No se pudo cargar la foto",
+    "@photoLoadError": {
+        "description": "Mensaje de error mostrado cuando falla la carga de una foto"
     }
 }

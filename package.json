@@ -1,0 +1,23 @@
+{
+  "name": "coffee-maker-release",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Semantic release configuration for Coffee Maker Flutter app",
+  "scripts": {
+    "semantic-release": "semantic-release"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/exec": "^6.0.3",    
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^10.0.3",
+    "semantic-release": "^23.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/username/coffee_maker.git"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

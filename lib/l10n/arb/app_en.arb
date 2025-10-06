@@ -3,5 +3,29 @@
     "counterAppBarTitle": "Counter",
     "@counterAppBarTitle": {
         "description": "Text shown in the AppBar of the Counter Page"
+    },
+    "offlineMessage": "No internet connection",
+    "@offlineMessage": {
+        "description": "Message shown when connected to network but no internet access"
+    },
+    "noNetworkMessage": "Not connected to any network",
+    "@noNetworkMessage": {
+        "description": "Message shown when no network interface is connected"
+    },
+    "retry": "Retry",
+    "@retry": {
+        "description": "Button text to retry connectivity check"
+    },
+    "homeLabel": "Home",
+    "@homeLabel": {
+        "description": "Label for the Home tab in bottom navigation"
+    },
+    "favoritesLabel": "Favorites",
+    "@favoritesLabel": {
+        "description": "Label for the Favorites tab in bottom navigation"
+    },
+    "photoLoadError": "Could not load photo",
+    "@photoLoadError": {
+        "description": "Error message shown when a photo fails to load"
     }
 }

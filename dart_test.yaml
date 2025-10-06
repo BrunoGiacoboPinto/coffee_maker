@@ -1,0 +1,10 @@
+test-randomize-ordering-seed: random
+
+tags:
+  golden:
+    description: Tests that compare golden files for UI consistency
+
+timeout: 30s
+
+platforms:
+  - vm

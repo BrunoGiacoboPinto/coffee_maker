@@ -1,0 +1,247 @@
+name: coffee_maker_release
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Build type'
+        required: true
+        default: 'release'
+        type: choice
+        options:
+          - debug
+          - profile
+          - release
+      flavor:
+        description: 'App flavor'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+
+jobs:
+  semantic-pull-request:
+    if: github.event_name == 'pull_request'
+    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/semantic_pull_request.yml@v1
+
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - name: 📚 Git Checkout
+        uses: actions/checkout@v5
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.35.x"
+          channel: stable
+          cache: true
+          cache-key: flutter-:os:-:channel:-:version:-:arch:-:hash:-${{ hashFiles('**/pubspec.lock') }}
+
+      - name: 📦 Install Dependencies
+        run: |
+          flutter pub global activate very_good_cli
+          very_good packages get --recursive
+
+      - name: ✨ Check Formatting
+        run: dart format --set-exit-if-changed lib test
+
+      - name: 🕵️ Analyze
+        run: flutter analyze lib test
+
+      - name: 🧪 Run Tests (excluding golden tests)
+        run: flutter test --exclude-tags golden --coverage --test-randomize-ordering-seed random
+
+      - name: 🚫 Exclude Files from Coverage
+        run: dart run lcov_excluder exclude
+
+      - name: 📊 Check Code Coverage
+        uses: VeryGoodOpenSource/very_good_coverage@v3
+        with:
+          path: coverage/lcov.info
+          min_coverage: 90
+
+  spell-check:
+    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/spell_check.yml@v1
+    with:
+      includes: |
+        **/*.md
+      modified_files_only: false
+      
+  release:
+    needs: [build, spell-check]
+    runs-on: ubuntu-latest
+    if: (github.ref == 'refs/heads/main' && github.event_name == 'push') || (github.event_name == 'workflow_dispatch')
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.35.x"
+          cache: true
+
+      - name: Setup Node.js for semantic-release
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install semantic-release dependencies
+        run: npm ci
+
+      - name: Setup version manager tool
+        run: |
+          dart pub get -C tools/version_manager
+
+      - name: Get current version
+        id: version
+        run: |
+          VERSION=$(dart run tools/version_manager/bin/version_manager.dart --show app)
+          echo "current_version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Set build parameters
+        id: build_params
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "build_type=${{ github.event.inputs.build_type }}" >> $GITHUB_OUTPUT
+            echo "flavor=${{ github.event.inputs.flavor }}" >> $GITHUB_OUTPUT
+            echo "manual_build=true" >> $GITHUB_OUTPUT
+          else
+            echo "build_type=release" >> $GITHUB_OUTPUT
+            echo "flavor=production" >> $GITHUB_OUTPUT
+            echo "manual_build=false" >> $GITHUB_OUTPUT
+          fi
+          
+          # Set app ID based on flavor
+          FLAVOR="${{ github.event.inputs.flavor || 'production' }}"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            FLAVOR="${{ github.event.inputs.flavor }}"
+          fi
+          
+          case $FLAVOR in
+            "development")
+              echo "app_id=${{ secrets.APP_ID_DEV }}" >> $GITHUB_OUTPUT
+              ;;
+            "staging")
+              echo "app_id=${{ secrets.APP_ID_STAGING }}" >> $GITHUB_OUTPUT
+              ;;
+            "production")
+              echo "app_id=${{ secrets.APP_ID_PROD }}" >> $GITHUB_OUTPUT
+              ;;
+            *)
+              echo "app_id=${{ secrets.APP_ID_PROD }}" >> $GITHUB_OUTPUT
+              ;;
+          esac
+
+      - name: Build APK
+        env:
+          API_BASE_URL: ${{ secrets.API_BASE_URL }}
+          APP_ID_DEV: ${{ secrets.APP_ID_DEV }}
+          APP_ID_PROD: ${{ secrets.APP_ID_PROD }}
+          APP_ID_STAGING: ${{ secrets.APP_ID_STAGING }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          PROBE_ENDPOINT: ${{ secrets.PROBE_ENDPOINT }}
+          PROBE_TIMEOUT: ${{ secrets.PROBE_TIMEOUT }}
+          RECEIVE_TIMEOUT: ${{ secrets.RECEIVE_TIMEOUT }}
+        run: |
+          flutter pub get
+          
+          BUILD_TYPE="${{ steps.build_params.outputs.build_type }}"
+          FLAVOR="${{ steps.build_params.outputs.flavor }}"
+          VERSION="${{ steps.version.outputs.current_version }}"
+          
+          echo "Building APK with type: $BUILD_TYPE, flavor: $FLAVOR, version: $VERSION"
+          
+          if [ "$BUILD_TYPE" = "debug" ]; then
+            flutter build apk --debug --flavor $FLAVOR -t lib/main_$FLAVOR.dart
+          elif [ "$BUILD_TYPE" = "profile" ]; then
+            flutter build apk --profile --flavor $FLAVOR -t lib/main_$FLAVOR.dart
+          else
+            flutter build apk --release --flavor $FLAVOR -t lib/main_$FLAVOR.dart
+          fi
+          
+          # Rename APK to include version
+          ORIGINAL_APK="build/app/outputs/flutter-apk/app-$FLAVOR-$BUILD_TYPE.apk"
+          VERSIONED_APK="build/app/outputs/flutter-apk/coffee-maker-$FLAVOR-$BUILD_TYPE-$VERSION.apk"
+          
+          if [ -f "$ORIGINAL_APK" ]; then
+            mv "$ORIGINAL_APK" "$VERSIONED_APK"
+            echo "Renamed APK to: $VERSIONED_APK"
+          else
+            echo "Warning: Expected APK not found at $ORIGINAL_APK"
+            ls -la build/app/outputs/flutter-apk/
+          fi
+
+      - name: Upload APK artifact (manual builds)
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coffee-maker-${{ steps.build_params.outputs.flavor }}-${{ steps.build_params.outputs.build_type }}-${{ steps.version.outputs.current_version }}
+          path: build/app/outputs/flutter-apk/coffee-maker-${{ steps.build_params.outputs.flavor }}-${{ steps.build_params.outputs.build_type }}-${{ steps.version.outputs.current_version }}.apk
+
+      - name: Run semantic-release (automatic builds only)
+        if: github.event_name != 'workflow_dispatch'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
+
+      - name: Publish to Firebase App Distribution
+        if: github.event_name != 'workflow_dispatch'
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ steps.build_params.outputs.app_id }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_TOKEN }}
+          groups: testers
+          file: build/app/outputs/flutter-apk/coffee-maker-${{ steps.build_params.outputs.flavor }}-${{ steps.build_params.outputs.build_type }}-${{ steps.version.outputs.current_version }}.apk
+          releaseNotes: |
+            🚀 New release automatically generated via semantic-release
+            
+            Build details:
+            - Version: ${{ steps.version.outputs.current_version }}
+            - Flavor: ${{ steps.build_params.outputs.flavor }}
+            - Build type: ${{ steps.build_params.outputs.build_type }}
+            - Branch: ${{ github.ref_name }}
+            - Commit: ${{ github.sha }}
+
+      - name: Publish to Firebase App Distribution (manual builds)
+        if: github.event_name == 'workflow_dispatch'
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ steps.build_params.outputs.app_id }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_TOKEN }}
+          groups: testers
+          file: build/app/outputs/flutter-apk/coffee-maker-${{ steps.build_params.outputs.flavor }}-${{ steps.build_params.outputs.build_type }}-${{ steps.version.outputs.current_version }}.apk
+          releaseNotes: |
+            🧪 Manual build for testing
+            
+            Build details:
+            - Version: ${{ steps.version.outputs.current_version }}
+            - Flavor: ${{ steps.build_params.outputs.flavor }}
+            - Build type: ${{ steps.build_params.outputs.build_type }}
+            - Branch: ${{ github.ref_name }}
+            - Commit: ${{ github.sha }}
