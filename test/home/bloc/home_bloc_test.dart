@@ -410,6 +410,119 @@ void main() {
       );
     });
 
+    group('PhotosUpdatedEvent', () {
+      setUp(() {
+        when(() => mockRepository.getCachedPhotos()).thenReturn([]);
+        homeBloc = HomeBloc(coffeePhotosRepository: mockRepository);
+      });
+
+      blocTest<HomeBloc, HomeState>(
+        'should update photos when photos are updated and in success state',
+        build: () {
+          when(
+            () => mockRepository.getCoffeePhotos(),
+          ).thenAnswer(
+            (_) async => [
+              const CoffeePhotoData(
+                url: 'https://example.com/photo1.jpg',
+                id: 'photo1',
+                isFavorite: false,
+              ),
+            ],
+          );
+          return homeBloc;
+        },
+        act: (bloc) {
+          bloc
+            ..add(const HomeEvent.fetchPhotos())
+            ..add(
+              const HomeEvent.photosUpdated([
+                CoffeePhotoData(
+                  url: 'https://example.com/photo1.jpg',
+                  id: 'photo1',
+                  isFavorite: true,
+                ),
+                CoffeePhotoData(
+                  url: 'https://example.com/photo2.jpg',
+                  id: 'photo2',
+                  isFavorite: false,
+                ),
+              ]),
+            );
+        },
+        expect: () => [
+          const HomeState.loading(),
+          const HomeState.success([
+            CoffeePhotoData(
+              url: 'https://example.com/photo1.jpg',
+              id: 'photo1',
+              isFavorite: false,
+            ),
+          ]),
+          const HomeState.success([
+            CoffeePhotoData(
+              url: 'https://example.com/photo1.jpg',
+              id: 'photo1',
+              isFavorite: true,
+            ),
+            CoffeePhotoData(
+              url: 'https://example.com/photo2.jpg',
+              id: 'photo2',
+              isFavorite: false,
+            ),
+          ]),
+        ],
+      );
+
+      blocTest<HomeBloc, HomeState>(
+        'should not update state when not in success state',
+        build: () {
+          return homeBloc;
+        },
+        act: (bloc) {
+          bloc.add(
+            const HomeEvent.photosUpdated([
+              CoffeePhotoData(
+                url: 'https://example.com/photo1.jpg',
+                id: 'photo1',
+                isFavorite: false,
+              ),
+            ]),
+          );
+        },
+        expect: () => <HomeState>[],
+      );
+    });
+
+    group('photosStream subscription', () {
+      test(
+        'should listen to photosStream and add PhotosUpdatedEvent',
+        () async {
+          final photosController = StreamController<List<CoffeePhotoData>>();
+          when(() => mockRepository.photosStream).thenAnswer(
+            (_) => photosController.stream,
+          );
+          when(() => mockRepository.getCachedPhotos()).thenReturn([]);
+
+          homeBloc = HomeBloc(coffeePhotosRepository: mockRepository);
+
+          photosController.add([
+            const CoffeePhotoData(
+              url: 'https://example.com/photo1.jpg',
+              id: 'photo1',
+              isFavorite: false,
+            ),
+          ]);
+
+          await pumpEventQueue();
+
+          expect(homeBloc.state, const HomeState.initial());
+
+          await photosController.close();
+        },
+      );
+    });
+
     group('error handling', () {
       setUp(() {
         when(() => mockRepository.getCachedPhotos()).thenReturn([]);

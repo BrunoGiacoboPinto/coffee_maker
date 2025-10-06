@@ -277,6 +277,107 @@ void main() {
       );
     });
 
+    group('PhotosUpdatedEvent', () {
+      setUp(() {
+        when(() => mockRepository.hasCachedFavorites()).thenReturn(false);
+        favoritesBloc = FavoritesBloc(coffeePhotosRepository: mockRepository);
+      });
+
+      blocTest<FavoritesBloc, FavoritesState>(
+        'should update favorites when photos are updated and in success state',
+        build: () {
+          when(
+            () => mockRepository.getFavoritePhotos(),
+          ).thenAnswer(
+            (_) async => [
+              const CoffeePhotoData(
+                url: 'https://example.com/photo1.jpg',
+                id: 'photo1',
+                isFavorite: true,
+              ),
+            ],
+          );
+          return favoritesBloc;
+        },
+        act: (bloc) {
+          bloc
+            ..add(const FavoritesEvent.fetchFavorites())
+            ..add(
+              const FavoritesEvent.photosUpdated([
+                CoffeePhotoData(
+                  url: 'https://example.com/photo1.jpg',
+                  id: 'photo1',
+                  isFavorite: true,
+                ),
+                CoffeePhotoData(
+                  url: 'https://example.com/photo2.jpg',
+                  id: 'photo2',
+                  isFavorite: false,
+                ),
+              ]),
+            );
+        },
+        expect: () => [
+          const FavoritesState.loading(),
+          const FavoritesState.success([
+            CoffeePhotoData(
+              url: 'https://example.com/photo1.jpg',
+              id: 'photo1',
+              isFavorite: true,
+            ),
+          ]),
+        ],
+      );
+
+      blocTest<FavoritesBloc, FavoritesState>(
+        'should not update state when not in success state',
+        build: () {
+          return favoritesBloc;
+        },
+        act: (bloc) {
+          bloc.add(
+            const FavoritesEvent.photosUpdated([
+              CoffeePhotoData(
+                url: 'https://example.com/photo1.jpg',
+                id: 'photo1',
+                isFavorite: true,
+              ),
+            ]),
+          );
+        },
+        expect: () => <FavoritesState>[],
+      );
+    });
+
+    group('photosStream subscription', () {
+      test(
+        'should listen to photosStream and add PhotosUpdatedEvent',
+        () async {
+          final photosController = StreamController<List<CoffeePhotoData>>();
+          when(() => mockRepository.photosStream).thenAnswer(
+            (_) => photosController.stream,
+          );
+          when(() => mockRepository.hasCachedFavorites()).thenReturn(false);
+
+          favoritesBloc = FavoritesBloc(coffeePhotosRepository: mockRepository);
+
+          photosController.add([
+            const CoffeePhotoData(
+              url: 'https://example.com/photo1.jpg',
+              id: 'photo1',
+              isFavorite: true,
+            ),
+          ]);
+
+          await pumpEventQueue();
+
+          expect(favoritesBloc.state, const FavoritesState.initial());
+
+          await photosController.close();
+        },
+      );
+    });
+
     group('error handling', () {
       setUp(() {
         when(() => mockRepository.hasCachedFavorites()).thenReturn(false);

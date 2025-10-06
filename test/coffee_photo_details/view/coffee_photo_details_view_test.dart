@@ -14,6 +14,35 @@ class MockCoffeePhotoDetailsBloc extends Mock
     implements CoffeePhotoDetailsBloc {}
 
 void main() {
+  group('CoffeePhotoDetailsPage', () {
+    late MockCoffeePhotoDetailsBloc mockBloc;
+
+    setUp(() {
+      mockBloc = MockCoffeePhotoDetailsBloc();
+    });
+
+    testWidgets(
+      'renders CoffeePhotoDetailsPage',
+      (tester) async {
+        when(
+          () => mockBloc.state,
+        ).thenReturn(const CoffeePhotoDetailsState.loading());
+        when(() => mockBloc.stream).thenAnswer(
+          (_) => Stream.value(const CoffeePhotoDetailsState.loading()),
+        );
+
+        await tester.pumpApp(
+          CoffeePhotoDetailsPage(
+            photoId: 'test-photo-id',
+            bloc: mockBloc,
+          ),
+        );
+
+        expect(find.byType(CoffeePhotoDetailView), findsOneWidget);
+      },
+    );
+  });
+
   group('CoffeePhotoDetailView', () {
     late MockCoffeePhotoDetailsBloc mockBloc;
 
@@ -62,6 +91,45 @@ void main() {
 
           expect(find.byType(CoffePhotoView), findsOneWidget);
           expect(find.byType(Shimmer), findsNothing);
+        },
+      );
+
+      testWidgets(
+        'renders CoffeePhotoDetailView for CoffeePhotoDetailsErrorState',
+        (tester) async {
+          when(
+            () => mockBloc.state,
+          ).thenReturn(const CoffeePhotoDetailsState.error('Test error'));
+          when(() => mockBloc.stream).thenAnswer(
+            (_) =>
+                Stream.value(const CoffeePhotoDetailsState.error('Test error')),
+          );
+
+          await tester.pumpApp(
+            CoffeePhotoDetailView(bloc: mockBloc, photoId: 'test-photo-id'),
+          );
+
+          expect(find.byType(Shimmer), findsOneWidget);
+          expect(find.byType(CoffePhotoView), findsNothing);
+        },
+      );
+
+      testWidgets(
+        'renders CoffeePhotoDetailView for CoffeePhotoDetailsInitialState',
+        (tester) async {
+          when(
+            () => mockBloc.state,
+          ).thenReturn(const CoffeePhotoDetailsState.initial());
+          when(() => mockBloc.stream).thenAnswer(
+            (_) => Stream.value(const CoffeePhotoDetailsState.initial()),
+          );
+
+          await tester.pumpApp(
+            CoffeePhotoDetailView(bloc: mockBloc, photoId: 'test-photo-id'),
+          );
+
+          expect(find.byType(Shimmer), findsOneWidget);
+          expect(find.byType(CoffePhotoView), findsNothing);
         },
       );
     });

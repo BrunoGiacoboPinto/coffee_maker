@@ -116,6 +116,46 @@ void main() {
           expect(find.byIcon(Icons.arrow_back), findsNothing);
         },
       );
+
+      testWidgets(
+        'renders CoffePhotoView with custom placeholder',
+        (tester) async {
+          final photo = TestDataFactory.createMockCoffeePhotoData(
+            id: 'test-photo',
+            url: 'https://example.com/test-photo.jpg',
+          );
+
+          await tester.pumpApp(
+            CoffePhotoView(
+              photo: photo,
+              onToggleFavorite: (_) {},
+              placeholder: const Text('Loading...'),
+            ),
+          );
+
+          expect(find.text('Loading...'), findsOneWidget);
+        },
+      );
+
+      testWidgets(
+        'renders CoffePhotoView with back button when '
+        'automaticallyImplyLeading is true',
+        (tester) async {
+          final photo = TestDataFactory.createMockCoffeePhotoData(
+            id: 'test-photo',
+          );
+
+          await tester.pumpApp(
+            CoffePhotoView(
+              photo: photo,
+              onToggleFavorite: (_) {},
+              automaticallyImplyLeading: true,
+            ),
+          );
+
+          expect(find.byIcon(Icons.arrow_back), findsOneWidget);
+        },
+      );
     });
 
     group('interactions', () {
@@ -144,6 +184,25 @@ void main() {
 
           expect(onToggleFavoriteCalled, isTrue);
           expect(toggledPhotoId, equals('test-photo'));
+        },
+      );
+
+      testWidgets(
+        'renders back button when automaticallyImplyLeading is true',
+        (tester) async {
+          final photo = TestDataFactory.createMockCoffeePhotoData(
+            id: 'test-photo',
+          );
+
+          await tester.pumpApp(
+            CoffePhotoView(
+              photo: photo,
+              onToggleFavorite: (_) {},
+              automaticallyImplyLeading: true,
+            ),
+          );
+
+          expect(find.byIcon(Icons.arrow_back), findsOneWidget);
         },
       );
     });

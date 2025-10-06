@@ -2,12 +2,6 @@ import 'package:coffee_maker/app/router/app_router.dart';
 import 'package:coffee_maker/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
-/*
- TODO:
-  - Improve logs
-  - Add semantic release and automatic release
-*/
-
 class App extends StatelessWidget {
   const App({super.key});
 

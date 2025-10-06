@@ -13,6 +13,32 @@ import '../../helpers/helpers.dart';
 class MockFavoritesBloc extends Mock implements FavoritesBloc {}
 
 void main() {
+  group('FavoritesPage', () {
+    late MockFavoritesBloc mockFavoritesBloc;
+
+    setUp(() {
+      mockFavoritesBloc = MockFavoritesBloc();
+    });
+
+    testWidgets(
+      'renders FavoritesPage',
+      (tester) async {
+        when(
+          () => mockFavoritesBloc.state,
+        ).thenReturn(const FavoritesState.initial());
+        when(
+          () => mockFavoritesBloc.stream,
+        ).thenAnswer((_) => Stream.value(const FavoritesState.initial()));
+
+        await tester.pumpApp(
+          FavoritesPage(favoritesBloc: mockFavoritesBloc),
+        );
+
+        expect(find.byType(FavoritesView), findsOneWidget);
+      },
+    );
+  });
+
   group('FavoritesView', () {
     late MockFavoritesBloc mockFavoritesBloc;
 
@@ -81,6 +107,26 @@ void main() {
           expect(find.byType(CoffeePhotoCard), findsNothing);
           expect(find.text('No favorites yet'), findsOneWidget);
           expect(find.byIcon(Icons.favorite_border), findsOneWidget);
+          expect(find.byType(Shimmer), findsNothing);
+        },
+      );
+
+      testWidgets(
+        'renders FavoritesView for FavoritesErrorState',
+        (tester) async {
+          when(
+            () => mockFavoritesBloc.state,
+          ).thenReturn(const FavoritesState.error('Test error'));
+          when(() => mockFavoritesBloc.stream).thenAnswer(
+            (_) => Stream.value(const FavoritesState.error('Test error')),
+          );
+
+          await tester.pumpApp(
+            FavoritesView(favoritesBloc: mockFavoritesBloc),
+          );
+
+          expect(find.byType(SizedBox), findsOneWidget);
+          expect(find.byType(CoffeePhotoCard), findsNothing);
           expect(find.byType(Shimmer), findsNothing);
         },
       );

@@ -13,6 +13,30 @@ import '../../helpers/helpers.dart';
 class MockHomeBloc extends Mock implements HomeBloc {}
 
 void main() {
+  group('HomePage', () {
+    late MockHomeBloc mockHomeBloc;
+
+    setUp(() {
+      mockHomeBloc = MockHomeBloc();
+    });
+
+    testWidgets(
+      'renders HomePage',
+      (tester) async {
+        when(() => mockHomeBloc.state).thenReturn(const HomeState.initial());
+        when(
+          () => mockHomeBloc.stream,
+        ).thenAnswer((_) => Stream.value(const HomeState.initial()));
+
+        await tester.pumpApp(
+          HomePage(homeBloc: mockHomeBloc),
+        );
+
+        expect(find.byType(HomeView), findsOneWidget);
+      },
+    );
+  });
+
   group('HomeView', () {
     late MockHomeBloc mockHomeBloc;
 
