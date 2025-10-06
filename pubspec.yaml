@@ -51,6 +51,7 @@ dev_dependencies:
   icons_launcher: ^3.0.3
   injectable_generator: ^2.6.2
   json_serializable: ^6.11.1
+  lcov_excluder: ^0.2.0
   mocktail: ^1.0.4
   patrol: ^3.19.0
   patrol_finders: ^2.9.0

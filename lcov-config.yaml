@@ -1,0 +1,10 @@
+coverage:
+  default:
+    exclude:
+      - "lib/l10n/**"
+      - "lib/di/injection.dart"
+      - "lib/main_*.dart"
+      - "lib/bootstrap.dart"
+      - "lib/**/*.g.dart"
+      - "lib/**/*.freezed.dart"
+      - "lib/**/*.config.dart"
