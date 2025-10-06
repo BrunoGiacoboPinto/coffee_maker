@@ -21,7 +21,8 @@ void main(List<String> arguments) {
       'show',
       abbr: 's',
       help:
-          'Show version of specific package (app, coffee_photos_repository, environment, network)',
+          'Show version of specific package'
+          ' (app, coffee_photos_repository, environment, network)',
       valueHelp: 'package',
     )
     ..addFlag(
@@ -44,7 +45,7 @@ void main(List<String> arguments) {
     }
 
     if (results['show-all'] as bool) {
-      showCurrentVersions(null);
+      showCurrentVersions();
       return;
     }
 
@@ -53,7 +54,8 @@ void main(List<String> arguments) {
       if (showPackage == null || showPackage.isEmpty) {
         _logger.severe('Package name required for --show');
         _logger.info(
-          'Available packages: app, coffee_photos_repository, environment, network',
+          'Available packages:'
+          ' app, coffee_photos_repository, environment, network',
         );
         exit(1);
       }
@@ -93,7 +95,7 @@ void _setupLogging() {
     };
 
     if (record.level == Level.INFO || record.level >= Level.WARNING) {
-      print('$emoji ${record.message}');
+      _logger.info('$emoji ${record.message}');
     }
   });
 }
@@ -173,8 +175,7 @@ void showCurrentVersions([String? targetPackage]) {
     if (File(filePath).existsSync()) {
       final version = _getCurrentVersion(filePath);
       if (version != null) {
-        // Raw output without formatting for CI/scripts
-        print(version);
+        _logger.info(version);
       } else {
         _logger.severe('Version not found in ${path.relative(filePath)}');
         exit(1);
