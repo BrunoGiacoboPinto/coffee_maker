@@ -4,6 +4,7 @@ import 'package:coffee_maker/favorites/view/favorites_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:patrol/patrol.dart';
 
 import '../../helpers/helpers.dart';
 
@@ -18,11 +19,11 @@ void main() {
     });
 
     group('light theme', () {
-      testWidgets(
+      patrolWidgetTest(
         'renders FavoritesView loading state',
         tags: TestTag.golden,
-        (tester) async {
-          tester
+        ($) async {
+          $
             ..setupPathProviderMocks()
             ..setupDatabaseFactory();
           when(
@@ -32,23 +33,23 @@ void main() {
             () => mockFavoritesBloc.stream,
           ).thenAnswer((_) => Stream.value(const FavoritesState.loading()));
 
-          await tester.pumpAppWithTheme(
+          await $.pumpAppWithTheme(
             FavoritesView(favoritesBloc: mockFavoritesBloc),
             theme: ThemeData(useMaterial3: true),
           );
 
           await expectLater(
-            find.byType(FavoritesView),
+            $(FavoritesView),
             matchesGoldenFile('favorites_view_loading_light.png'),
           );
         },
       );
 
-      testWidgets(
+      patrolWidgetTest(
         'renders FavoritesView success state with photos',
         tags: TestTag.golden,
-        (tester) async {
-          tester
+        ($) async {
+          $
             ..setupPathProviderMocks()
             ..setupDatabaseFactory();
           final photos = TestDataFactory.createMockCoffeePhotoList(
@@ -61,23 +62,23 @@ void main() {
             () => mockFavoritesBloc.stream,
           ).thenAnswer((_) => Stream.value(FavoritesState.success(photos)));
 
-          await tester.pumpAppWithTheme(
+          await $.pumpAppWithTheme(
             FavoritesView(favoritesBloc: mockFavoritesBloc),
             theme: ThemeData(useMaterial3: true),
           );
 
           await expectLater(
-            find.byType(FavoritesView),
+            $(FavoritesView),
             matchesGoldenFile('favorites_view_success_light.png'),
           );
         },
       );
 
-      testWidgets(
+      patrolWidgetTest(
         'renders FavoritesView success state with empty photos',
         tags: TestTag.golden,
-        (tester) async {
-          tester
+        ($) async {
+          $
             ..setupPathProviderMocks()
             ..setupDatabaseFactory();
           final emptyPhotos = TestDataFactory.createEmptyCoffeePhotoList();
@@ -88,13 +89,13 @@ void main() {
             (_) => Stream.value(FavoritesState.success(emptyPhotos)),
           );
 
-          await tester.pumpAppWithTheme(
+          await $.pumpAppWithTheme(
             FavoritesView(favoritesBloc: mockFavoritesBloc),
             theme: ThemeData(useMaterial3: true),
           );
 
           await expectLater(
-            find.byType(FavoritesView),
+            $(FavoritesView),
             matchesGoldenFile('favorites_view_empty_light.png'),
           );
         },
@@ -102,11 +103,11 @@ void main() {
     });
 
     group('dark theme', () {
-      testWidgets(
+      patrolWidgetTest(
         'renders FavoritesView loading state in dark theme',
         tags: TestTag.golden,
-        (tester) async {
-          tester
+        ($) async {
+          $
             ..setupPathProviderMocks()
             ..setupDatabaseFactory();
           when(
@@ -116,23 +117,23 @@ void main() {
             () => mockFavoritesBloc.stream,
           ).thenAnswer((_) => Stream.value(const FavoritesState.loading()));
 
-          await tester.pumpAppWithTheme(
+          await $.pumpAppWithTheme(
             FavoritesView(favoritesBloc: mockFavoritesBloc),
             darkTheme: ThemeData(useMaterial3: true),
           );
 
           await expectLater(
-            find.byType(FavoritesView),
+            $(FavoritesView),
             matchesGoldenFile('favorites_view_loading_dark.png'),
           );
         },
       );
 
-      testWidgets(
+      patrolWidgetTest(
         'renders FavoritesView success state with photos in dark theme',
         tags: TestTag.golden,
-        (tester) async {
-          tester
+        ($) async {
+          $
             ..setupPathProviderMocks()
             ..setupDatabaseFactory();
           final photos = TestDataFactory.createMockCoffeePhotoList(
@@ -145,23 +146,23 @@ void main() {
             () => mockFavoritesBloc.stream,
           ).thenAnswer((_) => Stream.value(FavoritesState.success(photos)));
 
-          await tester.pumpAppWithTheme(
+          await $.pumpAppWithTheme(
             FavoritesView(favoritesBloc: mockFavoritesBloc),
             darkTheme: ThemeData(useMaterial3: true),
           );
 
           await expectLater(
-            find.byType(FavoritesView),
+            $(FavoritesView),
             matchesGoldenFile('favorites_view_success_dark.png'),
           );
         },
       );
 
-      testWidgets(
+      patrolWidgetTest(
         'renders FavoritesView success state with empty photos in dark theme',
         tags: TestTag.golden,
-        (tester) async {
-          tester
+        ($) async {
+          $
             ..setupPathProviderMocks()
             ..setupDatabaseFactory();
           final emptyPhotos = TestDataFactory.createEmptyCoffeePhotoList();
@@ -172,13 +173,13 @@ void main() {
             (_) => Stream.value(FavoritesState.success(emptyPhotos)),
           );
 
-          await tester.pumpAppWithTheme(
+          await $.pumpAppWithTheme(
             FavoritesView(favoritesBloc: mockFavoritesBloc),
             darkTheme: ThemeData(useMaterial3: true),
           );
 
           await expectLater(
-            find.byType(FavoritesView),
+            $(FavoritesView),
             matchesGoldenFile('favorites_view_empty_dark.png'),
           );
         },

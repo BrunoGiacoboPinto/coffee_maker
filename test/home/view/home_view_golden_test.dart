@@ -4,6 +4,7 @@ import 'package:coffee_maker/home/view/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:patrol/patrol.dart';
 
 import '../../helpers/helpers.dart';
 
@@ -20,11 +21,11 @@ void main() {
     setUpAll(TestWidgetsFlutterBinding.ensureInitialized);
 
     group('light theme', () {
-      testWidgets(
+      patrolWidgetTest(
         'renders HomeView loading state',
         tags: TestTag.golden,
-        (tester) async {
-          tester
+        ($) async {
+          $
             ..setupPathProviderMocks()
             ..setupDatabaseFactory();
           when(() => mockHomeBloc.state).thenReturn(const HomeState.loading());
@@ -32,23 +33,23 @@ void main() {
             () => mockHomeBloc.stream,
           ).thenAnswer((_) => Stream.value(const HomeState.loading()));
 
-          await tester.pumpAppWithTheme(
+          await $.pumpAppWithTheme(
             HomeView(homeBloc: mockHomeBloc),
             theme: ThemeData(useMaterial3: true),
           );
 
           await expectLater(
-            find.byType(HomeView),
+            $(HomeView),
             matchesGoldenFile('home_view_loading_light.png'),
           );
         },
       );
 
-      testWidgets(
+      patrolWidgetTest(
         'renders HomeView success state with photos',
         tags: TestTag.golden,
-        (tester) async {
-          tester
+        ($) async {
+          $
             ..setupPathProviderMocks()
             ..setupDatabaseFactory();
           final photos = TestDataFactory.createMockCoffeePhotoList(count: 4);
@@ -57,23 +58,23 @@ void main() {
             () => mockHomeBloc.stream,
           ).thenAnswer((_) => Stream.value(HomeState.success(photos)));
 
-          await tester.pumpAppWithTheme(
+          await $.pumpAppWithTheme(
             HomeView(homeBloc: mockHomeBloc),
             theme: ThemeData(useMaterial3: true),
           );
 
           await expectLater(
-            find.byType(HomeView),
+            $(HomeView),
             matchesGoldenFile('home_view_success_light.png'),
           );
         },
       );
 
-      testWidgets(
+      patrolWidgetTest(
         'renders HomeView success state with loading indicator',
         tags: TestTag.golden,
-        (tester) async {
-          tester
+        ($) async {
+          $
             ..setupPathProviderMocks()
             ..setupDatabaseFactory();
           final photos = TestDataFactory.createMockCoffeePhotoList(count: 4);
@@ -86,23 +87,23 @@ void main() {
             (_) => Stream.value(HomeState.success(photos, isLoadingMore: true)),
           );
 
-          await tester.pumpAppWithTheme(
+          await $.pumpAppWithTheme(
             HomeView(homeBloc: mockHomeBloc),
             theme: ThemeData(useMaterial3: true),
           );
 
           await expectLater(
-            find.byType(HomeView),
+            $(HomeView),
             matchesGoldenFile('home_view_loading_more_light.png'),
           );
         },
       );
 
-      testWidgets(
+      patrolWidgetTest(
         'renders HomeView success state with empty photos',
         tags: TestTag.golden,
-        (tester) async {
-          tester
+        ($) async {
+          $
             ..setupPathProviderMocks()
             ..setupDatabaseFactory();
           final emptyPhotos = TestDataFactory.createEmptyCoffeePhotoList();
@@ -113,23 +114,23 @@ void main() {
             () => mockHomeBloc.stream,
           ).thenAnswer((_) => Stream.value(HomeState.success(emptyPhotos)));
 
-          await tester.pumpAppWithTheme(
+          await $.pumpAppWithTheme(
             HomeView(homeBloc: mockHomeBloc),
             theme: ThemeData(useMaterial3: true),
           );
 
           await expectLater(
-            find.byType(HomeView),
+            $(HomeView),
             matchesGoldenFile('home_view_empty_light.png'),
           );
         },
       );
 
-      testWidgets(
+      patrolWidgetTest(
         'renders HomeView error state',
         tags: TestTag.golden,
-        (tester) async {
-          tester
+        ($) async {
+          $
             ..setupPathProviderMocks()
             ..setupDatabaseFactory();
           when(
@@ -139,13 +140,13 @@ void main() {
             (_) => Stream.value(const HomeState.error('Test error')),
           );
 
-          await tester.pumpAppWithTheme(
+          await $.pumpAppWithTheme(
             HomeView(homeBloc: mockHomeBloc),
             theme: ThemeData(useMaterial3: true),
           );
 
           await expectLater(
-            find.byType(HomeView),
+            $(HomeView),
             matchesGoldenFile('home_view_error_light.png'),
           );
         },
@@ -153,11 +154,11 @@ void main() {
     });
 
     group('dark theme', () {
-      testWidgets(
+      patrolWidgetTest(
         'renders HomeView loading state in dark theme',
         tags: TestTag.golden,
-        (tester) async {
-          tester
+        ($) async {
+          $
             ..setupPathProviderMocks()
             ..setupDatabaseFactory();
           when(() => mockHomeBloc.state).thenReturn(const HomeState.loading());
@@ -165,23 +166,23 @@ void main() {
             () => mockHomeBloc.stream,
           ).thenAnswer((_) => Stream.value(const HomeState.loading()));
 
-          await tester.pumpAppWithTheme(
+          await $.pumpAppWithTheme(
             HomeView(homeBloc: mockHomeBloc),
             darkTheme: ThemeData(useMaterial3: true),
           );
 
           await expectLater(
-            find.byType(HomeView),
+            $(HomeView),
             matchesGoldenFile('home_view_loading_dark.png'),
           );
         },
       );
 
-      testWidgets(
+      patrolWidgetTest(
         'renders HomeView success state with photos in dark theme',
         tags: TestTag.golden,
-        (tester) async {
-          tester
+        ($) async {
+          $
             ..setupPathProviderMocks()
             ..setupDatabaseFactory();
           final photos = TestDataFactory.createMockCoffeePhotoList(count: 4);
@@ -190,23 +191,23 @@ void main() {
             () => mockHomeBloc.stream,
           ).thenAnswer((_) => Stream.value(HomeState.success(photos)));
 
-          await tester.pumpAppWithTheme(
+          await $.pumpAppWithTheme(
             HomeView(homeBloc: mockHomeBloc),
             darkTheme: ThemeData(useMaterial3: true),
           );
 
           await expectLater(
-            find.byType(HomeView),
+            $(HomeView),
             matchesGoldenFile('home_view_success_dark.png'),
           );
         },
       );
 
-      testWidgets(
+      patrolWidgetTest(
         'renders HomeView success state with loading indicator in dark theme',
         tags: TestTag.golden,
-        (tester) async {
-          tester
+        ($) async {
+          $
             ..setupPathProviderMocks()
             ..setupDatabaseFactory();
           final photos = TestDataFactory.createMockCoffeePhotoList(count: 4);
@@ -219,23 +220,23 @@ void main() {
             (_) => Stream.value(HomeState.success(photos, isLoadingMore: true)),
           );
 
-          await tester.pumpAppWithTheme(
+          await $.pumpAppWithTheme(
             HomeView(homeBloc: mockHomeBloc),
             darkTheme: ThemeData(useMaterial3: true),
           );
 
           await expectLater(
-            find.byType(HomeView),
+            $(HomeView),
             matchesGoldenFile('home_view_loading_more_dark.png'),
           );
         },
       );
 
-      testWidgets(
+      patrolWidgetTest(
         'renders HomeView success state with empty photos in dark theme',
         tags: TestTag.golden,
-        (tester) async {
-          tester
+        ($) async {
+          $
             ..setupPathProviderMocks()
             ..setupDatabaseFactory();
           final emptyPhotos = TestDataFactory.createEmptyCoffeePhotoList();
@@ -246,23 +247,23 @@ void main() {
             () => mockHomeBloc.stream,
           ).thenAnswer((_) => Stream.value(HomeState.success(emptyPhotos)));
 
-          await tester.pumpAppWithTheme(
+          await $.pumpAppWithTheme(
             HomeView(homeBloc: mockHomeBloc),
             darkTheme: ThemeData(useMaterial3: true),
           );
 
           await expectLater(
-            find.byType(HomeView),
+            $(HomeView),
             matchesGoldenFile('home_view_empty_dark.png'),
           );
         },
       );
 
-      testWidgets(
+      patrolWidgetTest(
         'renders HomeView error state in dark theme',
         tags: TestTag.golden,
-        (tester) async {
-          tester
+        ($) async {
+          $
             ..setupPathProviderMocks()
             ..setupDatabaseFactory();
           when(
@@ -272,13 +273,13 @@ void main() {
             (_) => Stream.value(const HomeState.error('Test error')),
           );
 
-          await tester.pumpAppWithTheme(
+          await $.pumpAppWithTheme(
             HomeView(homeBloc: mockHomeBloc),
             darkTheme: ThemeData(useMaterial3: true),
           );
 
           await expectLater(
-            find.byType(HomeView),
+            $(HomeView),
             matchesGoldenFile('home_view_error_dark.png'),
           );
         },

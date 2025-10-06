@@ -4,6 +4,7 @@ import 'package:coffee_maker/coffee_photo_details/view/coffee_photo_details.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:patrol/patrol.dart';
 
 import '../../helpers/helpers.dart';
 
@@ -19,11 +20,11 @@ void main() {
     });
 
     group('light theme', () {
-      testWidgets(
+      patrolWidgetTest(
         'renders CoffeePhotoDetailView loading state',
         tags: TestTag.golden,
-        (tester) async {
-          tester
+        ($) async {
+          $
             ..setupPathProviderMocks()
             ..setupDatabaseFactory();
           when(
@@ -33,23 +34,23 @@ void main() {
             (_) => Stream.value(const CoffeePhotoDetailsState.loading()),
           );
 
-          await tester.pumpAppWithTheme(
+          await $.pumpAppWithTheme(
             CoffeePhotoDetailView(bloc: mockBloc, photoId: 'test-photo-id'),
             theme: ThemeData(useMaterial3: true),
           );
 
           await expectLater(
-            find.byType(CoffeePhotoDetailView),
+            $(CoffeePhotoDetailView),
             matchesGoldenFile('photo_details_view_loading_light.png'),
           );
         },
       );
 
-      testWidgets(
+      patrolWidgetTest(
         'renders CoffeePhotoDetailView success state',
         tags: TestTag.golden,
-        (tester) async {
-          tester
+        ($) async {
+          $
             ..setupPathProviderMocks()
             ..setupDatabaseFactory();
           final photo = TestDataFactory.createMockCoffeePhotoData(
@@ -64,13 +65,13 @@ void main() {
             (_) => Stream.value(CoffeePhotoDetailsState.success(photo)),
           );
 
-          await tester.pumpAppWithTheme(
+          await $.pumpAppWithTheme(
             CoffeePhotoDetailView(bloc: mockBloc, photoId: 'test-photo-id'),
             theme: ThemeData(useMaterial3: true),
           );
 
           await expectLater(
-            find.byType(CoffeePhotoDetailView),
+            $(CoffeePhotoDetailView),
             matchesGoldenFile('photo_details_view_success_light.png'),
           );
         },
@@ -78,11 +79,11 @@ void main() {
     });
 
     group('dark theme', () {
-      testWidgets(
+      patrolWidgetTest(
         'renders CoffeePhotoDetailView loading state in dark theme',
         tags: TestTag.golden,
-        (tester) async {
-          tester
+        ($) async {
+          $
             ..setupPathProviderMocks()
             ..setupDatabaseFactory();
           when(
@@ -92,23 +93,23 @@ void main() {
             (_) => Stream.value(const CoffeePhotoDetailsState.loading()),
           );
 
-          await tester.pumpAppWithTheme(
+          await $.pumpAppWithTheme(
             CoffeePhotoDetailView(bloc: mockBloc, photoId: 'test-photo-id'),
             darkTheme: ThemeData(useMaterial3: true),
           );
 
           await expectLater(
-            find.byType(CoffeePhotoDetailView),
+            $(CoffeePhotoDetailView),
             matchesGoldenFile('photo_details_view_loading_dark.png'),
           );
         },
       );
 
-      testWidgets(
+      patrolWidgetTest(
         'renders CoffeePhotoDetailView success state in dark theme',
         tags: TestTag.golden,
-        (tester) async {
-          tester
+        ($) async {
+          $
             ..setupPathProviderMocks()
             ..setupDatabaseFactory();
           final photo = TestDataFactory.createMockCoffeePhotoData(
@@ -123,13 +124,13 @@ void main() {
             (_) => Stream.value(CoffeePhotoDetailsState.success(photo)),
           );
 
-          await tester.pumpAppWithTheme(
+          await $.pumpAppWithTheme(
             CoffeePhotoDetailView(bloc: mockBloc, photoId: 'test-photo-id'),
             darkTheme: ThemeData(useMaterial3: true),
           );
 
           await expectLater(
-            find.byType(CoffeePhotoDetailView),
+            $(CoffeePhotoDetailView),
             matchesGoldenFile('photo_details_view_success_dark.png'),
           );
         },
