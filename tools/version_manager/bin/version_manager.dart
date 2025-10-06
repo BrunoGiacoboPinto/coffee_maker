@@ -1,4 +1,4 @@
-// ignore_for_file: cascade_invocations
+// ignore_for_file: cascade_invocations, avoid_print
 
 import 'dart:io';
 import 'package:args/args.dart';
@@ -95,7 +95,7 @@ void _setupLogging() {
     };
 
     if (record.level == Level.INFO || record.level >= Level.WARNING) {
-      _logger.info('$emoji ${record.message}');
+      print('$emoji ${record.message}');
     }
   });
 }
