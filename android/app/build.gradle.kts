@@ -99,4 +99,5 @@ flutter {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:2.2.10")
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14")
 }

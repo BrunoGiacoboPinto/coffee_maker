@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:network/network.dart';
 
-class ConnectivityBanner extends StatelessWidget {
+final class ConnectivityBanner extends StatelessWidget {
   const ConnectivityBanner({
     required this.child,
     this.noNetworkMessage,

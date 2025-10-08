@@ -146,7 +146,7 @@ void main() {
         act: (bloc) => bloc.add(const HomeEvent.fetchPhotos()),
         expect: () => <HomeState>[],
         verify: (_) {
-          verify(() => mockRepository.getCoffeePhotos()).called(1);
+          verifyNever(() => mockRepository.getCoffeePhotos());
         },
       );
 
@@ -174,7 +174,7 @@ void main() {
         act: (bloc) => bloc.add(const HomeEvent.fetchPhotos()),
         expect: () => <HomeState>[],
         verify: (_) {
-          verify(() => mockRepository.getCoffeePhotos()).called(1);
+          verifyNever(() => mockRepository.getCoffeePhotos());
         },
       );
 

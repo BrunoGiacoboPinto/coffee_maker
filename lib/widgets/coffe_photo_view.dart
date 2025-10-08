@@ -30,6 +30,8 @@ class CoffePhotoView extends StatelessWidget {
         CachedNetworkImage(
           imageUrl: photo.url,
           fit: BoxFit.cover,
+          fadeInDuration: const Duration(milliseconds: 300),
+          fadeOutDuration: const Duration(milliseconds: 300),
           placeholder: (context, url) => placeholder ?? const SizedBox.shrink(),
           errorWidget: (context, url, error) => Container(
             color: Colors.grey[300],

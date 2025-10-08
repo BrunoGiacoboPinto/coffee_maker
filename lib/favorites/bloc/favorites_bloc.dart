@@ -22,13 +22,15 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
     on<PhotosUpdatedEvent>(_onPhotosUpdated);
 
     _photosSubscription = _coffeePhotosRepository.photosStream.listen((photos) {
-      add(FavoritesEvent.photosUpdated(photos));
+      add(
+        FavoritesEvent.photosUpdated([...photos.where((p) => p.isFavorite)]),
+      );
     });
   }
 
   late final _logger = Logger('FavoritesBloc');
   final CoffeePhotosRepository _coffeePhotosRepository;
-  late final StreamSubscription<List<CoffeePhotoData>> _photosSubscription;
+  StreamSubscription<List<CoffeePhotoData>>? _photosSubscription;
 
   Future<void> _onFetchFavorites(
     FetchFavoritesEvent event,
@@ -36,6 +38,8 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
   ) async {
     if (state is FavoritesInitialState) {
       emit(const FavoritesState.loading());
+    } else if (state is FavoritesSuccessState) {
+      return;
     }
 
     try {
@@ -63,14 +67,14 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
     Emitter<FavoritesState> emit,
   ) async {
     if (state is FavoritesSuccessState) {
-      final favorites = event.photos.where((p) => p.isFavorite).toList();
-      emit(FavoritesState.success(favorites));
+      emit(FavoritesState.success(event.photos));
     }
   }
 
   @override
   Future<void> close() async {
-    await _photosSubscription.cancel();
+    await _photosSubscription?.cancel();
+    _photosSubscription = null;
     await super.close();
   }
 }

@@ -25,11 +25,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     });
   }
 
+  static const int _kBatchSize = 15;
   late final _logger = Logger('HomeBloc');
+  StreamSubscription<List<CoffeePhotoData>>? _photosSubscription;
   final CoffeePhotosRepository _coffeePhotosRepository;
-  late final StreamSubscription<List<CoffeePhotoData>> _photosSubscription;
-  int _currentBatch = 0;
-  static const int _batchSize = 15;
 
   Future<void> _onFetchPhotos(
     FetchPhotosEvent event,
@@ -37,10 +36,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) async {
     if (state is! HomeSuccessState) {
       emit(const HomeState.loading());
+    } else {
+      return;
     }
 
     try {
-      _currentBatch = 0;
       final photos = await _coffeePhotosRepository.getCoffeePhotos();
       emit(HomeState.success(photos));
     } catch (error, stackTrace) {
@@ -82,18 +82,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(currentState.copyWith(isLoadingMore: true));
 
     try {
-      _currentBatch++;
       final newPhotos = await _coffeePhotosRepository.getCoffeePhotos(
-        count: _batchSize,
+        count: _kBatchSize,
       );
 
       final allPhotos = [...currentState.photos, ...newPhotos];
-      final hasReachedMax = newPhotos.length < _batchSize;
-
-      _logger.info(
-        'Loaded batch $_currentBatch: ${newPhotos.length} photos, '
-        'total: ${allPhotos.length}',
-      );
+      final hasReachedMax = newPhotos.length < _kBatchSize;
 
       emit(
         HomeState.success(
@@ -109,7 +103,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   @override
   Future<void> close() async {
-    await _photosSubscription.cancel();
+    await _photosSubscription?.cancel();
+    _photosSubscription = null;
     return super.close();
   }
 }
