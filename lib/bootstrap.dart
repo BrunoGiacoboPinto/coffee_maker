@@ -9,6 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:leak_tracker/leak_tracker.dart';
 import 'package:logging/logging.dart';
 import 'package:stack_trace/stack_trace.dart';
 
@@ -26,7 +27,10 @@ final class AppBlocObserver extends BlocObserver {
   @override
   void onChange(BlocBase<dynamic> bloc, Change<dynamic> change) {
     super.onChange(bloc, change);
-    _logger.info('AppBlocObserver.onChange(${bloc.runtimeType}, $change)');
+    _logger
+      ..info('AppBlocObserver.onChange(${bloc.runtimeType}')
+      ..info('___currentState: ${change.currentState}')
+      ..info('___nextState: ${change.nextState}');
   }
 
   @override
@@ -58,6 +62,15 @@ Future<void> bootstrap(
         },
       );
 
+      if (kDebugMode) {
+        LeakTracking.start();
+        FlutterMemoryAllocations.instance.addListener(
+          (ObjectEvent event) {
+            LeakTracking.dispatchObjectEvent(event.toMap());
+          },
+        );
+      }
+
       await Firebase.initializeApp(
         options: switch (flavor) {
           AppFlavor.production =>
@@ -83,6 +96,10 @@ Future<void> bootstrap(
       await configureDependencies();
 
       runApp(await builder());
+
+      if (kDebugMode) {
+        LeakTracking.stop();
+      }
     },
     onError: (error, stackTrace) {
       final trace = Trace.from(stackTrace);
