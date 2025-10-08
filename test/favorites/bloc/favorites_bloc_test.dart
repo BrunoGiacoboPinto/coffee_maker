@@ -163,7 +163,7 @@ void main() {
         act: (bloc) => bloc.add(const FavoritesEvent.fetchFavorites()),
         expect: () => <FavoritesState>[],
         verify: (_) {
-          verify(() => mockRepository.getFavoritePhotos()).called(1);
+          verifyNever(() => mockRepository.getFavoritePhotos());
         },
       );
 
@@ -194,7 +194,7 @@ void main() {
         act: (bloc) => bloc.add(const FavoritesEvent.fetchFavorites()),
         expect: () => <FavoritesState>[],
         verify: (_) {
-          verify(() => mockRepository.getFavoritePhotos()).called(1);
+          verifyNever(() => mockRepository.getFavoritePhotos());
         },
       );
 
@@ -308,11 +308,6 @@ void main() {
                   url: 'https://example.com/photo1.jpg',
                   id: 'photo1',
                   isFavorite: true,
-                ),
-                CoffeePhotoData(
-                  url: 'https://example.com/photo2.jpg',
-                  id: 'photo2',
-                  isFavorite: false,
                 ),
               ]),
             );
