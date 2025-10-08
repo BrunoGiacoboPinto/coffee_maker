@@ -35,35 +35,43 @@ Future<void> configureDependencies() async {
   final photosBox = await Hive.openBox<CoffeePhotoData>(_kPhotosBoxName);
 
   getIt
-    ..registerLazySingleton<Dio>(() => dio)
+    ..registerLazySingleton<Dio>(() => dio, dispose: (dio) => dio.close())
+    ..registerLazySingleton<Box<CoffeePhotoData>>(
+      () => photosBox,
+      dispose: (box) => box.close(),
+    )
     ..registerLazySingleton<CoffeePhotosService>(() => CoffeePhotosService(dio))
     ..registerLazySingleton<CoffeePhotosRepository>(
       () => CoffeePhotosRepository(
         coffeePhotosService: getIt<CoffeePhotosService>(),
         photosBox: photosBox,
       ),
+      dispose: (repository) => repository.dispose(),
     )
-    ..registerFactory<HomeBloc>(
+    ..registerLazySingleton<HomeBloc>(
       () => HomeBloc(
         coffeePhotosRepository: getIt<CoffeePhotosRepository>(),
       ),
+      dispose: (bloc) => bloc.close(),
     )
-    ..registerFactory<FavoritesBloc>(
+    ..registerLazySingleton<FavoritesBloc>(
       () => FavoritesBloc(
         coffeePhotosRepository: getIt<CoffeePhotosRepository>(),
       ),
+      dispose: (bloc) => bloc.close(),
     )
-    ..registerFactory<CoffeePhotoDetailsBloc>(
+    ..registerLazySingleton<CoffeePhotoDetailsBloc>(
       () => CoffeePhotoDetailsBloc(
         coffeePhotosRepository: getIt<CoffeePhotosRepository>(),
       ),
+      dispose: (bloc) => bloc.close(),
     )
-    ..registerLazySingleton<Box<CoffeePhotoData>>(() => photosBox)
     ..registerLazySingleton<InternetProber>(
       () => InternetProber(getIt<Dio>()),
     )
     ..registerSingleton<ConnectivityCubit>(
       ConnectivityCubit(getIt<InternetProber>()),
+      dispose: (cubit) => cubit.close(),
     );
 
   final connectivityCubit = getIt<ConnectivityCubit>();

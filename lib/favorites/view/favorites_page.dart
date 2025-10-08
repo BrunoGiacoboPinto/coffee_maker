@@ -5,21 +5,29 @@ import 'package:coffee_maker/widgets/coffee_photo_card.dart';
 import 'package:coffee_photos_repository/coffee_photos_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:shimmer/shimmer.dart';
 
 final class FavoritesPage extends StatelessWidget {
-  const FavoritesPage({required this.favoritesBloc, super.key});
+  const FavoritesPage({
+    required this.favoritesBloc,
+    super.key,
+  });
 
   final FavoritesBloc favoritesBloc;
 
   @override
-  Widget build(BuildContext context) =>
-      FavoritesView(favoritesBloc: favoritesBloc);
+  Widget build(BuildContext context) {
+    return FavoritesView(favoritesBloc: favoritesBloc);
+  }
 }
 
 final class FavoritesView extends StatefulWidget {
   @visibleForTesting
-  const FavoritesView({required this.favoritesBloc, super.key});
+  const FavoritesView({
+    required this.favoritesBloc,
+    super.key,
+  });
 
   final FavoritesBloc favoritesBloc;
 
@@ -99,7 +107,7 @@ final class _FavoritesViewEmpty extends StatelessWidget {
             size: 64,
             color: Colors.grey,
           ),
-          SizedBox(height: 16),
+          Gap(16),
           Text(
             'No favorites yet',
             style: TextStyle(
@@ -108,7 +116,7 @@ final class _FavoritesViewEmpty extends StatelessWidget {
               color: Colors.grey,
             ),
           ),
-          SizedBox(height: 8),
+          Gap(8),
           Text(
             'Tap the heart icon on photos to add them to your favorites',
             style: TextStyle(
@@ -136,17 +144,19 @@ final class _FavoritesViewSuccess extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: photos.length,
-      itemBuilder: (context, index) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: SizedBox(
-          height: 200,
-          child: CoffeePhotoCard(
-            photo: photos[index],
-            onToggleFavorite: onToggleFavorite,
-            detailsBloc: getIt<CoffeePhotoDetailsBloc>(),
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: SizedBox(
+            height: 200,
+            child: CoffeePhotoCard(
+              photo: photos[index],
+              onToggleFavorite: onToggleFavorite,
+              detailsBloc: getIt<CoffeePhotoDetailsBloc>(),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

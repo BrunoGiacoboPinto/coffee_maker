@@ -27,8 +27,8 @@ class ConnectivityCubit extends Cubit<ConnectivityStatus> {
     : _connectivity = connectivity ?? Connectivity(),
       super(ConnectivityStatus.online);
 
-  final InternetProber _internetProber;
   late final Logger _logger = Logger('ConnectivityCubit');
+  final InternetProber _internetProber;
   final Connectivity _connectivity;
 
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
@@ -59,7 +59,7 @@ class ConnectivityCubit extends Cubit<ConnectivityStatus> {
 
       if (results.isEmpty ||
           results.every((result) => result == ConnectivityResult.none)) {
-        _stopRecheckTimer();
+        _stopProbeTimer();
         emit(ConnectivityStatus.noNetwork);
         return;
       }
@@ -67,11 +67,11 @@ class ConnectivityCubit extends Cubit<ConnectivityStatus> {
       final hasInternet = await _internetProber.checkOnline();
 
       if (hasInternet) {
-        _stopRecheckTimer();
+        _stopProbeTimer();
         emit(ConnectivityStatus.online);
       } else {
         emit(ConnectivityStatus.offline);
-        _startRecheckTimer();
+        _startProbeTimer();
       }
     } on Exception catch (error, stackTrace) {
       _logger.severe('Error checking connectivity: $error', error, stackTrace);
@@ -79,15 +79,15 @@ class ConnectivityCubit extends Cubit<ConnectivityStatus> {
     }
   }
 
-  void _startRecheckTimer() {
-    _stopRecheckTimer();
+  void _startProbeTimer() {
+    _stopProbeTimer();
     _recheckTimer = Timer.periodic(
       const Duration(seconds: 30),
       (_) => _checkConnectivity(),
     );
   }
 
-  void _stopRecheckTimer() {
+  void _stopProbeTimer() {
     _recheckTimer?.cancel();
     _recheckTimer = null;
   }
@@ -95,14 +95,13 @@ class ConnectivityCubit extends Cubit<ConnectivityStatus> {
   /// Manually triggers a connectivity check.
   /// This can be called to force a re-evaluation of the current
   /// connectivity status.
-  Future<void> checkConnectivity() async {
-    await _checkConnectivity();
-  }
+  Future<void> checkConnectivity() async => _checkConnectivity();
 
   @override
   Future<void> close() async {
     await _connectivitySubscription?.cancel();
-    _stopRecheckTimer();
+    _connectivitySubscription = null;
+    _stopProbeTimer();
     return super.close();
   }
 }
