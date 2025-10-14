@@ -18,7 +18,7 @@ dependencies:
   environment:
     path: packages/environment
   firebase_core: ^4.1.1
-  firebase_crashlytics: ^5.0.2
+  firebase_crashlytics: ^5.0.3
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
