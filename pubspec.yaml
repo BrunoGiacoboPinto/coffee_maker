@@ -17,7 +17,7 @@ dependencies:
   dio: ^5.9.0
   environment:
     path: packages/environment
-  firebase_core: ^4.1.1
+  firebase_core: ^4.2.0
   firebase_crashlytics: ^5.0.2
   flutter:
     sdk: flutter
