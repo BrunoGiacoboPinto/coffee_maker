@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   animations: ^2.0.11
-  bloc: ^9.0.1
+  bloc: ^9.1.0
   cached_network_image: ^3.4.1
   coffee_photos_repository:
     path: packages/coffee_photos_repository
